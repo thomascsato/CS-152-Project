@@ -136,8 +136,7 @@ class Stack:
     def pop(self):
         return self.stack_list.pop()
     
-    # Pushes an item, provided the push doesn't exceed bounds. Does nothing 
-    # otherwise. Returns True if the push occurred, False otherwise.
+    # Pushes an item, provided the push doesn't exceed bounds. Does nothing otherwise. Returns True if the push occurred, False otherwise.
     def push(self, item):
         # If at max length, return false
         if len(self.stack_list) == self.max_length:
@@ -147,7 +146,8 @@ class Stack:
         self.stack_list.append(item)
         return True
     
-    def isempty(self):
+    # Predicate function, checking if stack is empty
+    def is_empty(self):
 
         if self.stack_list == []:
             print("IK it is empty")
