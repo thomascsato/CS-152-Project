@@ -41,18 +41,25 @@ def what_are_those(nouns,adjs):
     # When called, if the stack is empty, then it is shuffled and filled again with words from the list
     def refill_if_empty_then_pop(stack, source):
 
-        if stack.isempty():
+        if stack.is_empty():
             shuffle_and_fill(stack, source)
 
         return(stack.pop())
 
+    modebutton, modelabel = mode_switch_button(gw)
+    n_change_frame = base_frame(gw, modebutton)
+    summon_num_change_UI_button, n_picks_visualized = create_num_picks_button(gw, number_of_picks)
+    numberchoices, num_buttons = create_n_choices(gw, n_change_frame)
+    phrase_to_draw = phrase_label(gw)
 
     def click_action(e):
         # When the screen is clicked, the following code will run
-
+        
         global phrase_to_draw
         global ready_to_show
         global number_of_picks
+
+        element = gw.get_element_at(e.get_x(),e.get_y())
 
         def determine_phrase():
             global number_of_picks
@@ -99,13 +106,6 @@ def what_are_those(nouns,adjs):
                 number_of_picks = "R"
 
             return Active_Phrase_Adjectives # Returns the full phrase with the adjectives + nouns
-            
-        modebutton, modelabel = mode_switch_button(gw)
-        n_change_frame = base_frame(gw, modebutton)
-        summon_num_change_UI_button, n_picks_visualized = create_num_picks_button(gw, number_of_picks)
-        numberchoices, num_buttons = create_n_choices(gw, n_change_frame)
-        phrase_to_draw = phrase_label(gw)
-        element = gw.get_element_at(e.get_x(),e.get_y())
 
         def flip_n_change_frame_and_num_buttons():
 
@@ -154,7 +154,7 @@ def what_are_those(nouns,adjs):
                 curnode = curnode.next
 
             phrasetext.removesuffix(" ")
-            center_phrase_to_draw(gw, phrasetext)
+            center_phrase_to_draw(gw, phrase_to_draw, phrasetext)
             print(phrasetext)
             ready_to_show = False
 
