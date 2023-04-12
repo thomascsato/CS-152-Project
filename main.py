@@ -108,15 +108,16 @@ def what_are_those(nouns,adjs):
             return Active_Phrase_Adjectives # Returns the full phrase with the adjectives + nouns
 
         def flip_n_change_frame_and_num_buttons():
+            # Flips the stuff from outside the GWindow to the inside of the GWindow
 
             if n_change_frame.get_x() >= GWINDOW_WIDTH:
-                        n_change_frame.move(-(3*GWINDOW_WIDTH/20 +.5*n_change_frame.get_width()),0)
+                n_change_frame.move(-(3*GWINDOW_WIDTH/20 +.5*n_change_frame.get_width()),0)
 
             else:
                 n_change_frame.move(+(3*GWINDOW_WIDTH/20 +.5*n_change_frame.get_width()),0)
 
             for item in num_buttons:
-                item.flip_flop()
+                item.flip_flop(n_change_frame) # Flip flop is going to bring the stuff from outside the screen onto the screen.
 
             n_picks_visualized.set_label(number_of_picks)
 
@@ -134,20 +135,26 @@ def what_are_those(nouns,adjs):
                 n_change_frame.set_fill_color("GreenYellow")
 
         elif element == summon_num_change_UI_button or element == n_picks_visualized:
+
+            # If the top right button is clicked, it will pull up the menu to chancge the number of words in the phrase
             flip_n_change_frame_and_num_buttons()
             
-                
         elif type(element) is GLabel and element.get_label() in numberchoices:
+
+            # This is clicking one of the options for number of words, then pushing the menu off-screen
             number_of_picks = element.get_label()
             flip_n_change_frame_and_num_buttons()
             
-            
         elif ready_to_show and element != n_change_frame:
+
+            # If you click the screen anywhere else, it will run this algorithm and put text on the screen
             Active_Phrase_Total = determine_phrase()
             curnode = Active_Phrase_Total.head
             
             phrasetext = ""
             while curnode != None:
+
+                # Traverses the list of the whole phrase and puts that into a string to be displayed on screen
                 print(curnode.get_data())
                 phrasetext += curnode.get_data()
                 phrasetext += " "
@@ -156,15 +163,18 @@ def what_are_those(nouns,adjs):
             phrasetext.removesuffix(" ")
             center_phrase_to_draw(gw, phrase_to_draw, phrasetext)
             print(phrasetext)
+
+            # Flag that indicates whether text is already on the screen or not is set to False
             ready_to_show = False
 
         else:
+
             for list in [Active_Phrase_Adjectives, Active_Phrase_Nouns]:
                 clear_linkedlist(list)
 
+            # Flag that indicates whether text is already on the screen or not is set to True
             ready_to_show = True
             phrase_to_draw.set_label(" ")
-        
 
     gw.add_event_listener("click", click_action)
 
