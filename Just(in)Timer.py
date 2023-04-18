@@ -37,8 +37,8 @@ class Timerclass:
         self._compound = None
         self._Timerlabel = None
 
-        self._bc1 = "#000000"
-        self._bc2 = "#F0000F"
+        self._black = "#000000"
+        self._red = "#F0000F"
         self._play = "⏵"
         self._pause = "⏹"
 
@@ -88,21 +88,28 @@ class Timerclass:
         self._compound.add(start_stop_button)
         gw.add(self._compound)
 
+    def is_pause(self):
+            if self.ss_text.get_label() == self._play:
+                return True
+            else:
+                return False
 
     def play_pause(self):
-        if self.ss_text.get_label() == self._play:
+        if self.is_pause():
             self.ss_text.set_label(self._pause)
+
         else:
             self.ss_text.set_label(self._play)
-        
 
+        
+    
 
     def blink(self):
 
-        if self._Timerlabel.get_color() != self._bc2:
-            self._Timerlabel.set_color(self._bc2)
+        if self._Timerlabel.get_color() != self._red:
+            self._Timerlabel.set_color(self._red)
         else:
-            self._Timerlabel.set_color(self._bc1)
+            self._Timerlabel.set_color(self._black)
 
     def stop_time(self):
         global num_change_TF
@@ -110,6 +117,8 @@ class Timerclass:
             timer.stop()
             num_change_TF = True
             self._ticking = False
+            self.play_pause()
+            self._Timerlabel.set_color(self._black)
 
 
 #########################################################################################################----------------->TIMER
@@ -215,45 +224,46 @@ def what_are_those(nouns,adjs):
             colon = Timer_on_Screen._colon
             localx = e.get_x()-TimerCompound.get_x()
             localy = e.get_y()-TimerCompound.get_y()
-            if type(TimerCompound.get_element_at(localx,localy)) == GPolygon:
+            if type(TimerCompound.get_element_at(localx,localy)) == GPolygon :
+                if Timer_on_Screen.is_pause():
 
-
-                if localx < (Timerlabel.get_width()-colon.get_width())/4:
-                    if localy > 0:
-                        # Timerlabel_mins -= 10
-                        Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,600,False))
+                    if localx < (Timerlabel.get_width()-colon.get_width())/4:
+                        if localy > 0:
+                            # Timerlabel_mins -= 10
+                            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,600,False))
+                        else:
+                            # Timerlabel_mins += 10
+                            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,600))
+                    elif localx < (Timerlabel.get_width()-colon.get_width())/2:
+                        if localy > 0:
+                            # Timerlabel_mins -= 1
+                            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,60,False))
+                        else:
+                            # Timerlabel_mins += 1
+                            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,60))
+                    elif localx < 3*(Timerlabel.get_width()-colon.get_width())/4+colon.get_width():
+                        if localy > 0:
+                            # Timerlabel_secs -= 10
+                            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,10,False))
+                        else:
+                            # Timerlabel_secs += 10
+                            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,10))
                     else:
-                        # Timerlabel_mins += 10
-                        Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,600))
-                elif localx < (Timerlabel.get_width()-colon.get_width())/2:
-                    if localy > 0:
-                        # Timerlabel_mins -= 1
-                        Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,60,False))
-                    else:
-                        # Timerlabel_mins += 1
-                        Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,60))
-                elif localx < 3*(Timerlabel.get_width()-colon.get_width())/4+colon.get_width():
-                    if localy > 0:
-                        # Timerlabel_secs -= 10
-                        Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,10,False))
-                    else:
-                        # Timerlabel_secs += 10
-                        Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,10))
-                else:
-                    if localy > 0:
-                        # Timerlabel_secs -= 1
-                        Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1,False))
-                    else:
-                        # Timerlabel_secs += 1
-                        Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1))
+                        if localy > 0:
+                            # Timerlabel_secs -= 1
+                            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1,False))
+                        else:
+                            # Timerlabel_secs += 1
+                            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1))
 
             elif type(TimerCompound.get_element_at(localx,localy)) == GCompound:
 
-                Timer_on_Screen.play_pause()
+                
 
                 if not Timer_on_Screen._ticking:
                     global timer
                     timer = gw.set_interval(step,TIME_STEP)
+                    Timer_on_Screen.play_pause()
                     
                     Timer_on_Screen._ticking = True
                 elif Timer_on_Screen._ticking:
