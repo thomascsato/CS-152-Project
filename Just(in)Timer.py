@@ -104,38 +104,15 @@ class Timerclass:
         else:
             self._Timerlabel.set_color(self._bc1)
 
-
-# TimerCompound = GCompound()
-# Timerlabel = GLabel("00:00",0,0)
-# Timerlabel.set_font("40pt 'Consolas','bold'")
-
-# TimerCompound.set_location(GWINDOW_WIDTH/10-0.5*Timerlabel.get_width(),5*GWINDOW_HEIGHT/6-6)
-# TimerCompound.add(Timerlabel)
-# negation_when_needed_for_timer_setup = 1
-# for i in range(8):
-#     up_down_button = GPolygon()
-#     zero = GLabel("0")
-#     zero.set_font(Timerlabel.get_font())
-#     colon = GLabel(":")
-#     colon.set_font(Timerlabel.get_font())
-#     if i >= 4:
-#         negation_when_needed_for_timer_setup = -1
-#     if i % 4 >= 2:
-#         offset_with_colon = colon.get_width()
-#     else:
-#         offset_with_colon = 0
-#     up_down_button.add_vertex(i%4*zero.get_width()+offset_with_colon,(-Timerlabel.get_height()/2)*negation_when_needed_for_timer_setup-10-10*(1-negation_when_needed_for_timer_setup))
-#     for b in range(3):
-#         up_down_button.add_polar_edge(zero.get_width(),120*b*negation_when_needed_for_timer_setup)
-
-#     up_down_button.set_filled(True)
-#     up_down_button.set_fill_color(f"lightgrey")
+    def stop_time(self):
+        global num_change_TF
+        if timer != None:
+            timer.stop()
+            num_change_TF = True
+            self._ticking = False
 
 
-#     TimerCompound.add(up_down_button)
-# gw.add(TimerCompound)
-
-
+#########################################################################################################----------------->TIMER
 
 
 
@@ -145,7 +122,7 @@ class Timerclass:
 
 
 def what_are_those(nouns,adjs):
-    
+    global num_change_TF
     global thereisatimercurrentlyactive
  
     thereisatimercurrentlyactive = False
@@ -154,9 +131,9 @@ def what_are_those(nouns,adjs):
     Timer_on_Screen = Timerclass()
     Timer_on_Screen.draw_compound()
 
+    
 
     def incr_decr(Timerlabel1,secs = 1,increasing=True):
-            print("incrdecring")
             Timerlabel_separated = Timerlabel1.get_label().split(":")
             Timerlabel_mins = int(Timerlabel_separated[0])
             Timerlabel_secs = int(Timerlabel_separated[1])
@@ -175,6 +152,8 @@ def what_are_those(nouns,adjs):
                 #     Timerlabel_secs = (60 - Timerlabel_secs) % 60
                 #     if Timerlabel_mins < 0:
                 #         Timerlabel_mins = Timerlabel_mins % 60
+                
+
             if not 0 <= Timerlabel_secs <= 59:
                 if Timerlabel_secs > 59:
                     Timerlabel_mins += Timerlabel_secs // 60
@@ -197,6 +176,7 @@ def what_are_those(nouns,adjs):
                     time_part = f"0{time_part}"
                 newtime.append(time_part)
      
+            
             return f"{newtime[0]}:{newtime[1]}"
 
 
@@ -204,16 +184,16 @@ def what_are_those(nouns,adjs):
     def step():
         global num_change_TF
         Timer_on_Screen.blink()
-        if num_change_TF:
-            Timer_on_Screen._Timerlabel.set_label(incr_decr(Timer_on_Screen._Timerlabel,1,False))
-            num_change_TF = False
+        if Timer_on_Screen._Timerlabel.get_label() == "00:00":
+            Timer_on_Screen.stop_time()
         else:
-            num_change_TF = True
-        # if not timerclass._ticking:
-        #     timerclass._ticking = True
-        #     Timerlabel2 = timerclass._Timerlabel
-        #     incr_decr(Timerlabel2,1,False)
-        #     timerclass.ticking = False
+
+            if num_change_TF:
+                Timer_on_Screen._Timerlabel.set_label(incr_decr(Timer_on_Screen._Timerlabel,1,False))
+                num_change_TF = False
+            else:
+                num_change_TF = True
+
 
    
 
@@ -229,7 +209,7 @@ def what_are_those(nouns,adjs):
 
 
         if type(element) == GCompound:
-            print("is gcomp")
+
             TimerCompound = Timer_on_Screen._compound
             Timerlabel = Timer_on_Screen._Timerlabel
             colon = Timer_on_Screen._colon
@@ -266,21 +246,7 @@ def what_are_those(nouns,adjs):
                     else:
                         # Timerlabel_secs += 1
                         Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1))
-                
-                # if Timerlabel_secs > 59:
-                #     Timerlabel_mins += 1
-                #     Timerlabel_secs = 0
-                # elif Timerlabel_secs < 0:
-                #     if Timerlabel_mins == 0:
-                #         Timerlabel_mins = 59
-                #         Timerlabel_secs = 60 + Timerlabel_secs
-                #     else:
-                #         Timerlabel_mins -= 1
-                #         Timerlabel_secs = 60+Timerlabel_secs
-                # if Timerlabel_mins > 59:
-                #     Timerlabel_mins = 0 + Timerlabel_mins%60
-                # if Timerlabel_mins < 0:
-                #     Timerlabel_mins = 60 + Timerlabel_mins
+
             elif type(TimerCompound.get_element_at(localx,localy)) == GCompound:
 
                 Timer_on_Screen.play_pause()
@@ -291,11 +257,8 @@ def what_are_those(nouns,adjs):
                     
                     Timer_on_Screen._ticking = True
                 elif Timer_on_Screen._ticking:
-                    if timer != None:
-                        timer.stop()
-                        Timer_on_Screen._Timerlabel.set_color(Timer_on_Screen._bc1)
-                        num_change_TF = True
-                        Timer_on_Screen._ticking = False
+                    Timer_on_Screen.stop_time()
+                    
 
                     
 
