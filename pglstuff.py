@@ -22,8 +22,11 @@ class n_picks_switch_key:
         gw.add(self._text, x, y)
 
     def flip_flop(self, n_change_frame):
+        # This function brings the off-screen object and brings it onto the screen so it is visible.
+
         if self._text.get_x() >= GWINDOW_WIDTH:
             self._text.move(-(3*GWINDOW_WIDTH/20 +.5*n_change_frame.get_width()),0)
+
         else:
             self._text.move(+(3*GWINDOW_WIDTH/20 +.5*n_change_frame.get_width()),0)
 

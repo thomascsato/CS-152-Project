@@ -5,6 +5,7 @@ import random as rng
 from pgl import GWindow, GLine, GOval, GRect, GPolygon, GLabel, GCompound
 from datastructures import Node, LinkedList, Stack, clear_linkedlist, is_in_linkedlist, shuffle_and_fill
 from pglstuff import mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label
+from timer import timer, Timerclass
 
 # Constants
 global ready_to_show
@@ -20,6 +21,10 @@ gw = GWindow(GWINDOW_WIDTH,GWINDOW_HEIGHT)
 def what_are_those(nouns,adjs):
     global phrase_to_draw
     global ready_to_show    
+
+    # Create Timer
+    timers = Timerclass(gw)
+    timer(nouns, adjs, gw, timers)
 
     # Lists of words that will be displayed in the program
     noun_list = ['penguin', 'elephant', 'lion', 'tortoise', 'dog', 'bee', 'monkey', 'alligator', 'dolphin', 'badger', 'snake', 'ant', 'wolf', 'armadillo', 'beetle', 'pelican', 'axolotl', 'fish', 'squid', 'ferret', 'spider', 'rhino', 'shark', 'octopus', 'whale', 'worm', 'mouse', 'mole', 'cat', 'butterfly', 'moth', 'scorpion', 'goose', 'fox', 'capybara', 'centipede', 'chicken', 'wasp', 'frog', 'toad', 'hippo', 'lizard', 'newt', 'seal', 'snail', 'hawk', 'crab', 'crocodile', 'pig', 'dragonfly', 'dragon', 'platypus', 'otter', 'fungus', 'amongus', 'eel', 'seaturtle', 'bat', 'orca', 'iguana', 'ray', 'whaleshark', 'anteater', 'panda', 'bear', 'gorilla', 'scarab', 'hermitcrab', 'jellyfish', 'cobra', 'mongoose', 'llama', 'mantisshrimp', 'opossum', 'piranha', 'mantis', 'rabbit', 'seaurchin', 'lobster', 'walrus', 'tank', 'mecha', 'jetplane', 'flytrap', 'hedgehog', 'goat', 'human', 'cactus', 'plesiosaur', 'chamelion', 'gecko', 'propellerplane', 'rat', 'seacucumber', 'hummingbird', 'trex', 'raptor', 'triceratops', 'pteranodon', 'motorcycle', 'armor', 'pufferfish', 'catfish', 'groundhog', 'cicada', 'president', 'warrior', 'toilet', 'ent', 'chandelier', 'clam', 'cow', 'clock', 'virus', 'racecar', 'bus', 'towtruck', 'sloth', 'scarecrow', 'palmtree', 'barrel', 'safe', 'rug', 'crane']
@@ -134,6 +139,10 @@ def what_are_those(nouns,adjs):
                 modebutton.set_fill_color("GreenYellow")
                 n_change_frame.set_fill_color("GreenYellow")
 
+        elif element == timers._compound:
+            # When the timer is clicked, the phrase does not show because the elif/else statement below doesn't run
+            pass
+                        
         elif element == summon_num_change_UI_button or element == n_picks_visualized:
 
             # If the top right button is clicked, it will pull up the menu to chancge the number of words in the phrase
