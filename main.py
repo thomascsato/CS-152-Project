@@ -4,13 +4,7 @@
 import random as rng
 from pgl import GWindow, GLine, GOval, GRect, GPolygon, GLabel, GCompound
 from datastructures import Node, LinkedList, Stack, clear_linkedlist, is_in_linkedlist, shuffle_and_fill
-from pglstuff import Timerclass, mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label
-
-
-import math
-import time as tmr
-
-
+from pglstuff import Timerclass, mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label, draw_gw_button_xywhLCF
 
 
 
@@ -123,6 +117,7 @@ def what_are_those(nouns,adjs):
 
     noun_list = nouns_easy
     adj_list = adj_easy
+    
 
     # Initializes the stack of nouns, shuffles the order of words
     nounstack = Stack()
@@ -149,6 +144,9 @@ def what_are_those(nouns,adjs):
     summon_num_change_UI_button, n_picks_visualized = create_num_picks_button(gw, number_of_picks)
     numberchoices, num_buttons = create_n_choices(gw, n_change_frame)
     phrase_to_draw = phrase_label(gw)
+    difficulty_change_button, difficulty_change_label = draw_gw_button_xywhLCF(gw, 17*GWINDOW_WIDTH/20-1000, 2, GWINDOW_WIDTH/10, GWINDOW_HEIGHT/10, " Easy", "lightgreen", "15pt 'Consolas'")
+    auto_button, auto_label = draw_gw_button_xywhLCF(gw,GWINDOW_WIDTH/6,8*GWINDOW_HEIGHT/10,Timer_on_Screen._Timerlabel.get_width()/2,Timer_on_Screen._Timerlabel.get_height()/2+2," AUTO ","lightgrey","15pt 'Consolas'")
+    zero_button, zero_label = draw_gw_button_xywhLCF(gw,GWINDOW_WIDTH/6,7*GWINDOW_HEIGHT/10,Timer_on_Screen._Timerlabel.get_width()/2,Timer_on_Screen._Timerlabel.get_height()/2+2," ZERO ","lightgrey","15pt 'Consolas'")
 
     def click_action(e):
         # When the screen is clicked, the following code will run
@@ -204,6 +202,8 @@ def what_are_those(nouns,adjs):
             if set_back_to_R_ping:
                 number_of_picks = "R"
 
+            print(adj_list, noun_list)
+
             return Active_Phrase_Adjectives # Returns the full phrase with the adjectives + nouns
 
         def flip_n_change_frame_and_num_buttons():
@@ -232,6 +232,42 @@ def what_are_those(nouns,adjs):
                 modelabel.set_label("Putback Mode")
                 modebutton.set_fill_color("GreenYellow")
                 n_change_frame.set_fill_color("GreenYellow")
+        
+        elif element == auto_button or element == auto_label:
+            
+            if Timer_on_Screen._ticking == False:
+                appropriate_time= int(n_picks_visualized.get_label())
+                Timer_on_Screen._Timerlabel.set_label(f"0{appropriate_time}:00")
+
+
+            # if auto_label.get_label() == " AUTO ":
+            #     auto_label.set_label("MANUAL")
+            # elif auto_label.get_label() == "MANUAL":
+            #     auto_label.set_label(" AUTO ")
+        
+        elif element == zero_button or element == zero_label:
+
+            if Timer_on_Screen._ticking == False:
+                appropriate_time= int(n_picks_visualized.get_label())
+                Timer_on_Screen._Timerlabel.set_label(f"00:00")
+
+        elif element == difficulty_change_button or element == difficulty_change_label:
+
+            # If the difficulty change button is clicked, it will run this function
+            if difficulty_change_label.get_label() == " Easy":
+                difficulty_change_label.set_label("Medium")
+                noun_list = nouns_easy
+                adj_list = adj_easy
+
+            elif difficulty_change_label.get_label() == "Medium":
+                difficulty_change_label.set_label(" Hard")
+                noun_list = nouns_medium
+                adj_list = adj_medium
+                
+            else:
+                difficulty_change_label.set_label(" Easy")
+                noun_list = nouns_hard
+                adj_list = adj_hard
 
         elif type(element) == GCompound:
 
@@ -273,8 +309,6 @@ def what_are_those(nouns,adjs):
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1))
 
             elif type(TimerCompound.get_element_at(localx,localy)) == GCompound:
-
-                
 
                 if not Timer_on_Screen._ticking:
                     
