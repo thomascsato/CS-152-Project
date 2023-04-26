@@ -6,7 +6,7 @@ from playsound import playsound
 import random as rng
 from pgl import GWindow, GLine, GOval, GRect, GPolygon, GLabel, GCompound
 from datastructures import Node, LinkedList, Stack, clear_linkedlist, is_in_linkedlist, shuffle_and_fill
-from pglstuff import Timerclass, mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label,draw_gw_button_xywhLCF
+from pglstuff import Timerclass, mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label, draw_gw_button_xywhLCF
 
 
 import math
@@ -155,6 +155,8 @@ def what_are_those(nouns,adjs):
             if number_of_picks == "R":  # Chooses a random number from 2-9 for the number of picks
                 number_of_picks = rng.randint(2,9)
                 set_back_to_R_ping = True
+                Timer_on_Screen._Timerlabel.set_label(f"0{number_of_picks}:00")
+
 
             else: # Whatever the number of picks is set at, sets that to the number of picks
                 number_of_picks = int(number_of_picks)
@@ -226,8 +228,11 @@ def what_are_those(nouns,adjs):
         elif element == auto_button or element == auto_label:
             
             if Timer_on_Screen._ticking == False:
-                appropriate_time= int(n_picks_visualized.get_label())
-                Timer_on_Screen._Timerlabel.set_label(f"0{appropriate_time}:00")
+                if n_picks_visualized.get_label() != "R":
+                    appropriate_time= int(n_picks_visualized.get_label())
+                    Timer_on_Screen._Timerlabel.set_label(f"0{appropriate_time}:00")
+                elif ready_to_show:
+                    Timer_on_Screen._Timerlabel.set_label(f"??:??")
 
 
             # if auto_label.get_label() == " AUTO ":
@@ -246,11 +251,12 @@ def what_are_those(nouns,adjs):
             TimerCompound = Timer_on_Screen._compound
             Timerlabel = Timer_on_Screen._Timerlabel
             colon = Timer_on_Screen._colon
+            
             localx = e.get_x()-TimerCompound.get_x()
             localy = e.get_y()-TimerCompound.get_y()
             if type(TimerCompound.get_element_at(localx,localy)) == GPolygon :
-                if Timer_on_Screen.is_pause():
-
+                if Timer_on_Screen.is_pause() and Timerlabel.get_label() != "??:??":
+                    
                     if localx < (Timerlabel.get_width()-colon.get_width())/4:
                         if localy > 0:
                             # Timerlabel_mins -= 10
@@ -281,8 +287,6 @@ def what_are_those(nouns,adjs):
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1))
 
             elif type(TimerCompound.get_element_at(localx,localy)) == GCompound:
-
-                
 
                 if not Timer_on_Screen._ticking:
                     
