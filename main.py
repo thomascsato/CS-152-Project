@@ -31,8 +31,6 @@ def what_are_those(nouns,adjs):
     global phrase_to_draw
     global ready_to_show    
 
-    
-
     # Create Timer
     Timer_on_Screen = Timerclass()
     Timer_on_Screen.draw_compound(gw)
@@ -102,14 +100,35 @@ def what_are_those(nouns,adjs):
             else:
                 num_change_TF = True
 
+    nouns_easy = ['penguin', 'elephant', 'lion', 'tortoise', 'dog', 'bee', 'monkey', 'alligator', 'dolphin', 'badger', 'snake',
+                'ant', 'wolf', 'beetle', 'fish', 'squid', 'ferret', 'spider', 'rhino','shark', 'octopus', 'worm', 'mouse', 'cat',
+                'butterfly', 'moth','goose', 'chicken', 'frog', 'toad', 'lizard', 'seal', 'snail', 'crocodile', 'pig', 'dragon',
+                'amongus', 'eel', 'bat', 'panda', 'bear', 'gorilla', 'jellyfish', 'rabbit', 'walrus', 'tank', 'mecha', 'jetplane',
+                'human', 'cactus', 'rat', 'seacucumber', 'hummingbird', 'trex', 'pufferfish', 'warrior', 'toilet',
+                'cow', 'clock', 'virus', 'scarecrow', 'palmtree', 'barrel']
+    nouns_medium = ['armadillo', 'pelican', 'whale', 'mole', 'scorpion', 'fox', 'wasp', 'hippo', 'newt', 'hawk', 'crab', 'otter',
+                    'fungus', 'seaturtle', 'orca', 'iguana', 'ray', 'whaleshark', 'cobra', 'mongoose', 'llama', 'opossum',
+                    'mantis', 'seaurchin', 'lobster', 'hedgehog', 'goat', 'gecko', 'motorcycle', 'armor', 'catfish', 'groundhog',
+                    'clam', 'racecar', 'bus', 'sloth',] + nouns_easy
+    nouns_hard = ['axolotl', 'capybara', 'centipede', 'dragonfly', 'platypus', 'anteater', 'scarab', 'hermitcrab', 'mantisshrimp',
+                'piranha', 'flytrap', 'plesiosaur', 'chamelion', 'propellerplane', 'raptor', 'triceratops', 'pteranodon', 'cicada',
+                'chandelier', 'towtruck', 'safe', 'rug', 'crane'] + nouns_medium
+    adj_easy = ['icy', 'burning', 'fancy', 'round', 'stony', 'sneaky', 'devious', 'ghostly', 'venomous', 'strong', 'mechanical',
+                'magical', 'dangerous', 'cool', 'electric', 'slimy', 'smoky', 'spotted', 'striped', 'frightening', 'frightened',
+                'shaded', 'ancient', 'triangular', 'armored', 'blanketed']
+    adj_medium = ['metallic', 'stretchy', 'shielded', 'bladed', 'armed', 'eccentric', 'skeletal', 'lasering', 'artistic',
+                'explosive', 'royal'] + adj_easy
+    adj_hard = ['steampunk', 'psychic', 'spectacled', 'crystalline', 'abstract', 'futuristic', 'prehistoric',
+                'scrap-iron'] + adj_medium
+
+    noun_list = nouns_easy
+    adj_list = adj_easy
 
     # Initializes the stack of nouns, shuffles the order of words
-    noun_list = read_word_bag(nouns)
     nounstack = Stack()
     shuffle_and_fill(nounstack, noun_list)
 
     # Initializes the stack of adjectives, shuffles the order of words
-    adj_list = read_word_bag(adjs)
     adjectivestack = Stack()
     shuffle_and_fill(adjectivestack,adj_list)
 
@@ -317,8 +336,9 @@ def what_are_those(nouns,adjs):
 
 
 # Borrowed from Professor Roberts' Adventure Project
+"""
 def read_word_bag(f):
-    """Reads the entire word bag from the file."""
+    ""Reads the entire word bag from the file.""
     f = open(f"C:\\Users\\3vanw\\OneDrive\\Desktop\\W_A_T\{f}")
     list = []
     reading = True
@@ -331,6 +351,7 @@ def read_word_bag(f):
             list.append(name)
 
     return list
+"""
 
 if __name__ == "__main__":
     what_are_those("nouns.txt", "adjectives.txt")
