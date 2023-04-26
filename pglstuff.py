@@ -16,7 +16,7 @@ class n_picks_switch_key:
     def form_sub_button(self, gw, x, y):  # Adds button to the GWindow with x and y coordinates
         self._text = GLabel(f"{self._name}")
 
-        self._text.set_font("20pt 'Comic Sans MS','Serif','bold'")
+        self._text.set_font("20pt 'Consolas','bold'")
         self._text.set_color("black")
 
         gw.add(self._text, x, y)
@@ -42,7 +42,7 @@ def mode_switch_button(gw):
 
     # Adds the label itself to the screen
     modelabel = GLabel(f"Takeout Mode")
-    modelabel.set_font("20pt 'Comic Sans MS','Serif','bold'")
+    modelabel.set_font("20pt 'Consolas','bold'")
     modelabel.set_color("black")
     x = (gw.get_width() - modelabel.get_width()) / 2 
     y = (2 + .75*gw.get_height()/10)   
@@ -79,7 +79,7 @@ def create_num_picks_button(gw, number_of_picks):
 
     # Label on the number of picks button, R-9
     n_picks_visualized = GLabel(f"{number_of_picks}")
-    n_picks_visualized.set_font("20pt 'Comic Sans MS','Serif','bold'")
+    n_picks_visualized.set_font("20pt 'Consolas','bold'")
     n_picks_visualized.set_color("black")
     x = (18*gw.get_width()/20 - n_picks_visualized.get_width()/2)  
     y = (2 + .75*gw.get_height()/10)   
