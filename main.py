@@ -136,7 +136,9 @@ def what_are_those(nouns,adjs):
     summon_num_change_UI_button, n_picks_visualized = create_num_picks_button(gw, number_of_picks)
     numberchoices, num_buttons = create_n_choices(gw, n_change_frame)
     phrase_to_draw = phrase_label(gw)
-    auto_button, auto_label = draw_gw_button_xywhLCF(gw,GWINDOW_WIDTH/6,9*GWINDOW_HEIGHT/10,100,40," AUTO ","lightgrey","15pt 'Consolas'")
+    auto_button, auto_label = draw_gw_button_xywhLCF(gw,GWINDOW_WIDTH/6,8*GWINDOW_HEIGHT/10,Timer_on_Screen._Timerlabel.get_width()/2,Timer_on_Screen._Timerlabel.get_height()/2+2," AUTO ","lightgrey","15pt 'Consolas'")
+    zero_button, zero_label = draw_gw_button_xywhLCF(gw,GWINDOW_WIDTH/6,7*GWINDOW_HEIGHT/10,Timer_on_Screen._Timerlabel.get_width()/2,Timer_on_Screen._Timerlabel.get_height()/2+2," ZERO ","lightgrey","15pt 'Consolas'")
+    
 
     def click_action(e):
         # When the screen is clicked, the following code will run
@@ -232,6 +234,11 @@ def what_are_those(nouns,adjs):
             #     auto_label.set_label("MANUAL")
             # elif auto_label.get_label() == "MANUAL":
             #     auto_label.set_label(" AUTO ")
+        
+        elif element == zero_button or element == zero_label:
+            if Timer_on_Screen._ticking == False:
+                appropriate_time= int(n_picks_visualized.get_label())
+                Timer_on_Screen._Timerlabel.set_label(f"00:00")
                 
 
         elif type(element) == GCompound:
