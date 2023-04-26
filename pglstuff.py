@@ -203,5 +203,31 @@ class Timerclass:
             else:
                 self._Timerlabel.set_color(self._black)
         
+def draw_gw_button_xywhLCF(gw,x=0,y=0,width=10,height=10,labeltext = "",color="lightgrey",font="20pt 'Consolas'",ycorfa=2):
+    # Returns tuple containing the GObjects for both the button and the label
 
+    # Adds the mode button to the screen ("Takeout Mode" or "Putback mode")
+    button = GRect(x,y,width,height)
+    button.set_filled(True)
+    button.set_fill_color(color)
+    gw.add(button) #create button visuals
 
+    # Adds the label itself to the screen
+    label = GLabel(labeltext)
+    label.set_font(font)
+    label.set_color("black")
+    midline = label.get_height()/2
+    if width <= label.get_width():
+        width = label.get_width() + 20
+        labx = x + 10
+    else:
+        labx = x+(width -label.get_width())/2
+
+    if height < label.get_height():
+        height= label.get_height() + 20
+        laby = y+ midline + 10
+    else:
+        laby = y+ height/2 + midline -ycorfa
+    gw.add(label, labx, laby)
+
+    return (button, label)

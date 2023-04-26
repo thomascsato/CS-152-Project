@@ -1,10 +1,12 @@
 # Main program file
 
 # Imports
+from playsound import playsound
+
 import random as rng
 from pgl import GWindow, GLine, GOval, GRect, GPolygon, GLabel, GCompound
 from datastructures import Node, LinkedList, Stack, clear_linkedlist, is_in_linkedlist, shuffle_and_fill
-from pglstuff import Timerclass, mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label
+from pglstuff import Timerclass, mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label,draw_gw_button_xywhLCF
 
 
 import math
@@ -93,6 +95,10 @@ def what_are_those(nouns,adjs):
             
             stop_time(Timer_on_Screen)
             countdown.stop()
+            # pip uninstall playsound
+            # pip install playsound==1.2.2
+            playsound("C:\\Users\\3vanw\\OneDrive\\Desktop\\WAT dowloaded\\watsound.mp3", False)
+            
             
         else:
             
@@ -130,6 +136,7 @@ def what_are_those(nouns,adjs):
     summon_num_change_UI_button, n_picks_visualized = create_num_picks_button(gw, number_of_picks)
     numberchoices, num_buttons = create_n_choices(gw, n_change_frame)
     phrase_to_draw = phrase_label(gw)
+    auto_button, auto_label = draw_gw_button_xywhLCF(gw,GWINDOW_WIDTH/6,9*GWINDOW_HEIGHT/10,100,40," AUTO ","lightgrey","15pt 'Consolas'")
 
     def click_action(e):
         # When the screen is clicked, the following code will run
@@ -213,6 +220,19 @@ def what_are_those(nouns,adjs):
                 modelabel.set_label("Putback Mode")
                 modebutton.set_fill_color("GreenYellow")
                 n_change_frame.set_fill_color("GreenYellow")
+
+        elif element == auto_button or element == auto_label:
+            
+            if Timer_on_Screen._ticking == False:
+                appropriate_time= int(n_picks_visualized.get_label())
+                Timer_on_Screen._Timerlabel.set_label(f"0{appropriate_time}:00")
+
+
+            # if auto_label.get_label() == " AUTO ":
+            #     auto_label.set_label("MANUAL")
+            # elif auto_label.get_label() == "MANUAL":
+            #     auto_label.set_label(" AUTO ")
+                
 
         elif type(element) == GCompound:
 
