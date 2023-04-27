@@ -89,24 +89,24 @@ def what_are_those(nouns,adjs):
     def step():
         global num_change_TF
         global countdown
-        
-        Timer_on_Screen.blink()
-        if Timer_on_Screen._Timerlabel.get_label() == "00:00":
+        if Timer_on_Screen._Timerlabel.get_label() != "??:??":
+            Timer_on_Screen.blink()
+            if Timer_on_Screen._Timerlabel.get_label() == "00:00":
+                
+                stop_time(Timer_on_Screen)
+                countdown.stop()
+                # pip uninstall playsound
+                # pip install playsound==1.2.2
+                playsound("C:\\Users\\3vanw\\OneDrive\\Desktop\\WAT dowloaded\\watsound.mp3", False)
             
-            stop_time(Timer_on_Screen)
-            countdown.stop()
-            # pip uninstall playsound
-            # pip install playsound==1.2.2
-            playsound("C:\\Users\\3vanw\\OneDrive\\Desktop\\WAT dowloaded\\watsound.mp3", False)
             
-            
-        else:
-            
-            if num_change_TF:
-                Timer_on_Screen._Timerlabel.set_label(incr_decr(Timer_on_Screen._Timerlabel,1,False))
-                num_change_TF = False
             else:
-                num_change_TF = True
+                
+                if num_change_TF:
+                    Timer_on_Screen._Timerlabel.set_label(incr_decr(Timer_on_Screen._Timerlabel,1,False))
+                    num_change_TF = False
+                else:
+                    num_change_TF = True
 
 
     # Initializes the stack of nouns, shuffles the order of words
@@ -242,7 +242,7 @@ def what_are_those(nouns,adjs):
         
         elif element == zero_button or element == zero_label:
             if Timer_on_Screen._ticking == False:
-                appropriate_time= int(n_picks_visualized.get_label())
+                
                 Timer_on_Screen._Timerlabel.set_label(f"00:00")
                 
 
@@ -288,7 +288,7 @@ def what_are_those(nouns,adjs):
 
             elif type(TimerCompound.get_element_at(localx,localy)) == GCompound:
 
-                if not Timer_on_Screen._ticking:
+                if not Timer_on_Screen._ticking and Timer_on_Screen._Timerlabel.get_label() != "??:??":
                     
                     countdown= gw.set_interval(step,TIME_STEP)
                     Timer_on_Screen.play_pause()
