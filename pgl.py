@@ -16,9 +16,9 @@ import urllib.request
 
 # Version information
 
-PGL_VERSION = 0.95
+PGL_VERSION = 0.96
 PGL_BUGFIX = 0
-PGL_DATE = "20-Jun-21"
+PGL_DATE = "19-Mar-22"
 
 # Conditional imports
 
@@ -105,7 +105,8 @@ class GWindow(object):
         for w in tk.winfo_children():
             w.destroy()
         self._canvas = tkinter.Canvas(tk, width=width, height=height,
-                                      highlightthickness=0, bg='white')
+                                      background="white",
+                                      highlightthickness=0)
         try:
             self._canvas.pack()
         except:
@@ -148,7 +149,10 @@ class GWindow(object):
         Waits for events to happen in the window.
         """
         self._event_loop_started = True
-        tkinter._root.mainloop()
+        try:
+            tkinter._root.mainloop()
+        except KeyboardInterrupt:
+            sys.exit(0)
 
 # Public method: request_focus
 
@@ -1107,6 +1111,7 @@ class GOval(GFillableObject):
             height = a4
         self._width = width
         self._height = height
+        self._rep = "Oval"
         self.set_location(x, y)
 
 # Public method: set_size
@@ -1560,6 +1565,7 @@ class GArc(GFillableObject):
         self._frame_height = height
         self._start = start
         self._sweep = sweep
+        self._rep = "Oval"
         self.set_location(x, y)
 
 # Public method: set_start_angle
@@ -1820,10 +1826,7 @@ class GArc(GFillableObject):
                 fill = outline
             self._update_properties(outline=outline, fill=fill)
         else:
-            # if self._rep == "Oval":
-                # self._update_properties(fill='')
-            # else:
-            self._update_properties(outline=self._color)
+            self._update_properties(outline=self._color, fill="")
 
 # Private method: _create_arc_coords
 

@@ -1,0 +1,15 @@
+propellerplane
+motorcycle
+armor
+president
+toilet
+chandelier
+clock
+virus
+racecar
+bus
+towtruck
+barrel
+safe
+rug
+microwaveoven

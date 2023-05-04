@@ -1,8 +1,7 @@
 from pgl import GWindow, GLine, GOval, GRect, GPolygon, GLabel, GCompound
 
 # Window Dimensions
-GWINDOW_WIDTH = 1250
-GWINDOW_HEIGHT = 500
+
 
 #gw = GWindow(GWINDOW_WIDTH,GWINDOW_HEIGHT)
 
@@ -16,33 +15,42 @@ class n_picks_switch_key:
     def form_sub_button(self, gw, x, y):  # Adds button to the GWindow with x and y coordinates
         self._text = GLabel(f"{self._name}")
 
-        self._text.set_font("20pt 'Consolas','bold'")
+        self._text.set_font("30pt 'Consolas','bold'")
         self._text.set_color("black")
 
         gw.add(self._text, x, y)
 
-    def flip_flop(self, n_change_frame):
+    def flip_flop(self,gw, n_change_frame):
         # This function brings the off-screen object and brings it onto the screen so it is visible.
 
-        if self._text.get_x() >= GWINDOW_WIDTH:
-            self._text.move(-(3*GWINDOW_WIDTH/20 +.5*n_change_frame.get_width()),0)
+        if self._text.get_x() >= gw.get_width():
+            self._text.move(-(3*gw.get_width()/20 +.5*n_change_frame.get_width()),0)
 
         else:
-            self._text.move(+(3*GWINDOW_WIDTH/20 +.5*n_change_frame.get_width()),0)
+            self._text.move(+(3*gw.get_width()/20 +.5*n_change_frame.get_width()),0)
+
+# Creating function to cause "Info" menu to appear/ disappear
+def flip_over_vertical_screen_edge(gw, GObject):
+
+
+    if GObject.get_x() >= gw.get_width(): 
+        GObject.set_location( GObject.get_x() % gw.get_width() ,GObject.get_y())
+    elif 0 <= GObject.get_x() < gw.get_width():
+        GObject.set_location(gw.get_width() + GObject.get_x(),GObject.get_y()) 
 
 # Creating mode switch button
 def mode_switch_button(gw):
     # Returns tuple containing the GObjects for both the button and the label
 
-    # Adds the mode button to the screen ("Takeout Mode" or "Putback mode")
+    # Adds the mode button to the screen ("TAKEOUT MODE" or "PUTBACK MODE")
     modebutton = GRect(gw.get_width()/4,2,gw.get_width()/2,gw.get_height()/10)
     modebutton.set_filled(True)
     modebutton.set_fill_color("Aquamarine")
     gw.add(modebutton) #create button visuals
 
     # Adds the label itself to the screen
-    modelabel = GLabel(f"Takeout Mode")
-    modelabel.set_font("20pt 'Consolas','bold'")
+    modelabel = GLabel(f"TAKEOUT MODE")
+    modelabel.set_font("30pt 'Consolas','bold'")
     modelabel.set_color("black")
     x = (gw.get_width() - modelabel.get_width()) / 2 
     y = (2 + .75*gw.get_height()/10)   
@@ -55,7 +63,7 @@ def phrase_label(gw):
 
     phrase_to_draw = GLabel(f" ")
     phrase_to_draw.set_font("20pt 'Century Schoolbook','Serif','bold'")
-    phrase_to_draw.set_color("black")
+    phrase_to_draw.set_color("#FEFEFE")
     x = (gw.get_width() - phrase_to_draw.get_width()) / 2 
     y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2 
     gw.add(phrase_to_draw, x, y)
@@ -79,7 +87,7 @@ def create_num_picks_button(gw, number_of_picks):
 
     # Label on the number of picks button, R-9
     n_picks_visualized = GLabel(f"{number_of_picks}")
-    n_picks_visualized.set_font("20pt 'Consolas','bold'")
+    n_picks_visualized.set_font("30pt 'Consolas','bold'")
     n_picks_visualized.set_color("black")
     x = (18*gw.get_width()/20 - n_picks_visualized.get_width()/2)  
     y = (2 + .75*gw.get_height()/10)   
@@ -90,7 +98,7 @@ def create_num_picks_button(gw, number_of_picks):
 # Adds a base frame to the GWindow in order for it to be manipulated when adding the 10 other boxes to it
 def base_frame(gw, modebutton):
 
-    n_change_frame = GRect(GWINDOW_WIDTH, GWINDOW_HEIGHT/10+6, 194, 60)
+    n_change_frame = GRect(21*gw.get_width()/20, 2+gw.get_height()/10+6, 194, 96)
     n_change_frame.set_filled(True)
     n_change_frame.set_fill_color(modebutton.get_fill_color())
     gw.add(n_change_frame)
@@ -110,7 +118,7 @@ def create_n_choices(gw, n_change_frame):
             y = (n_change_frame.get_y()+gw.get_height()/20 +2)
             
         else:
-            y = n_change_frame.get_y() + n_change_frame.get_height()-4
+            y = n_change_frame.get_y() + n_change_frame.get_height()-8
 
         x = n_change_frame.get_x() + 8 + 40 * (item%5)
         
@@ -127,10 +135,10 @@ class Timerclass:
         self._compound = None
         self._Timerlabel = None
         self._color_change_ok = True
-        self._black = "#000000"
+        self._unred = "#fefefe"
         self._red = "#F0000F"
-        self._play = "⏵"
-        self._pause = "⏹"
+        self._play = "  ⏵  "
+        self._pause = "  ⏹  "
 
 
 
@@ -138,7 +146,8 @@ class Timerclass:
         self._compound = GCompound()
         self._Timerlabel = GLabel(self._display_time,0,-3)
         self._Timerlabel.set_font("40pt 'Consolas','bold'")
-        self._compound.set_location(GWINDOW_WIDTH/10-0.5*self._Timerlabel.get_width(),5*GWINDOW_HEIGHT/6-6)
+        self._Timerlabel.set_color(self._unred)
+        self._compound.set_location(gw.get_width()/10-0.5*self._Timerlabel.get_width(),5*gw.get_height()/6-6)
         self._compound.add(self._Timerlabel)
         negation_when_needed_for_timer_setup = 1
         for i in range(8):
@@ -177,6 +186,7 @@ class Timerclass:
         start_stop_button.add(self.ss_text)
         self._compound.add(start_stop_button)
         gw.add(self._compound)
+        
 
     def is_pause(self):
             if self.ss_text.get_label() == self._play:
@@ -201,12 +211,12 @@ class Timerclass:
             if self._Timerlabel.get_color() != self._red:
                 self._Timerlabel.set_color(self._red)
             else:
-                self._Timerlabel.set_color(self._black)
+                self._Timerlabel.set_color(self._unred)
         
-def draw_gw_button_xywhLCF(gw,x=0,y=0,width=10,height=10,labeltext = "",color="lightgrey",font="20pt 'Consolas'",ycorfa=2):
+def draw_gw_button_xywhLCFfc(gw,x=0,y=0,width=10,height=10,labeltext = "",color="lightgrey",font="20pt 'Consolas'",fontcolor = "black", ycorfa=2):
     # Returns tuple containing the GObjects for both the button and the label
 
-    # Adds the mode button to the screen ("Takeout Mode" or "Putback mode")
+    # Adds the mode button to the screen ("TAKEOUT MODE" or "PUTBACK MODE")
     button = GRect(x,y,width,height)
     button.set_filled(True)
     button.set_fill_color(color)
@@ -215,7 +225,7 @@ def draw_gw_button_xywhLCF(gw,x=0,y=0,width=10,height=10,labeltext = "",color="l
     # Adds the label itself to the screen
     label = GLabel(labeltext)
     label.set_font(font)
-    label.set_color("black")
+    label.set_color(fontcolor)
     midline = label.get_height()/2
     if width <= label.get_width():
         width = label.get_width() + 20
@@ -231,3 +241,31 @@ def draw_gw_button_xywhLCF(gw,x=0,y=0,width=10,height=10,labeltext = "",color="l
     gw.add(label, labx, laby)
 
     return (button, label)
+
+
+def just_draw_label(gw,x,y,labeltext,font="20pt 'Consolas'",ycorfa = 2, part_of_something_greater = False):
+    label = GLabel(labeltext)
+    label.set_font(font)
+    label.set_color("black")
+
+    labx = x
+    laby = y
+    gw.add(label, labx, laby)
+
+    return label
+
+def draw_fun_labels(gw,info):
+    fun_label_1 = just_draw_label(gw, gw.get_width()+11, info.get_y() + info.get_height()+10,"PLAYING FOR FUN:")
+    fun_label_2 = just_draw_label(gw, gw.get_width()+11, fun_label_1.get_y() + fun_label_1.get_height()+10,"> Set the timer in the lower left corner.")
+    fun_label_3 = just_draw_label(gw, gw.get_width()+11, fun_label_2.get_y() + fun_label_2.get_height()+10,"> Click the screen, and a phrase will appear.")
+    fun_label_4 = just_draw_label(gw, gw.get_width()+11, fun_label_3.get_y() + fun_label_3.get_height()+10,"> Remember your phrase, click again to hide your phrase.")
+    fun_label_5 = just_draw_label(gw, gw.get_width()+11, fun_label_4.get_y() + fun_label_4.get_height()+10,"> Pass the device to the next person.")
+    fun_label_6 = just_draw_label(gw, gw.get_width()+11, fun_label_5.get_y() + fun_label_5.get_height()+10,"> Start the timer after all players have a phrase.")
+    fun_label_7 = just_draw_label(gw, gw.get_width()+11, fun_label_6.get_y() + fun_label_6.get_height()+10,"> Once the timer is up, guess other players' phrases!")
+    for fun_label in [fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7]:
+                fun_label.set_color("#FEFEFE")
+    return(fun_label_1,fun_label_2,fun_label_3,fun_label_4,fun_label_5,fun_label_6,fun_label_7)
+
+
+
+
