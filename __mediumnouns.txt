@@ -19,23 +19,23 @@ eel
 orca
 anteater
 panda
-whaleshark
+whale shark
 scarab
-hermitcrab
+hermit crab
 cobra
 mongoose
 llama
-mantisshrimp
+mantis shrimp
 tank
 mecha
-jetplane
-flytrap
+jet plane
+venus flytrap
 walrus
 hedgehog
 plesiosaur
 chamelion
 gecko
-seacucumber
+sea cucumber
 hummingbird
 T.rex
 raptor
@@ -47,26 +47,25 @@ groundhog
 cicada
 warrior
 clam
-palmtree
+palm tree
 parrot
 albatross
 amargasaurus
-anglerfish
+angler fish
 archaeopteryx
 aye-aye
 antelope
 moose
 tarantula
 sturgeon
-baskingshark
+basking shark
 vulture
-blobfish
 bobcat
 basilisk
 kingfisher
 python
 peafowl
-monitor
+monitor lizard
 brachiosaurus
 caracal
 cheetah
@@ -74,38 +73,28 @@ chinchilla
 salmon
 cuttlefish
 crow
-dimetrodon
 corgi
 dodo
 eagle
 puffin
 firefly
-muskellunge
 gargoyle
-gilamonster
+gila monster
 woodpecker
-horseshoecrab
+horseshoe crab
 jerboa
 leech
 lionfish
 mosasaurus
-anomalocaris
 trilobite
 axolotl
 barnacle
 hyena
-coconutcrab
+coconut crab
 cassowary
-seaanenome
-fossa
-hagfish
-velvetworm
-molamola
 narwhal
 wobbegong
 turkey
-stonefish
-frogfish
 orangutan
 ostrich
 sawfish
@@ -113,14 +102,14 @@ slug
 spinosaurus
 skate
 seahorse
-spermwhale
+sperm whale
 scarecrow
 crane
-seaurchin
+sea urchin
 tuatara
 fungus
-amongus
+among us
 boar
 gnu
 wombat
-yeticrab
+yeti crab

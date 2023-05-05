@@ -59,23 +59,57 @@ def mode_switch_button(gw):
     return (modebutton, modelabel)
 
 # Initializes and adds the phrase label to the screen
-def phrase_label(gw):
+def phrase_label_and_backup(gw):
 
     phrase_to_draw = GLabel(f" ")
-    phrase_to_draw.set_font("20pt 'Century Schoolbook','Serif','bold'")
+    phrase_to_draw.set_font("30pt 'Century Schoolbook','Serif','bold'")
     phrase_to_draw.set_color("#FEFEFE")
     x = (gw.get_width() - phrase_to_draw.get_width()) / 2 
     y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2 
     gw.add(phrase_to_draw, x, y)
+    backup = GLabel(f" ")
+    backup.set_font("30pt 'Century Schoolbook','Serif','bold'")
+    backup.set_color("#FEFEFE")
+    x = (gw.get_width() - backup.get_width()) / 2 
+    y = (gw.get_height() + backup.get_ascent()) / 2 
+    gw.add(backup, x, y)
         
-    return phrase_to_draw
+    return phrase_to_draw, backup
+
+# From Todd Gamblin on stackoverflow
+def find_nth(haystack, needle, n):
+    start = haystack.find(needle)
+    while start >= 0 and n > 1:
+        start = haystack.find(needle, start+len(needle))
+        n -= 1
+    return start
+
+
+
 
 # Centers the text on the screen
-def center_phrase_to_draw(gw, phrase_to_draw, new_text):
+def center_phrase_to_draw(gw, phrase_to_draw, new_text, backup = None):
 
     phrase_to_draw.set_label(new_text)
-    phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 ,
-                                y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
+    if phrase_to_draw.get_width() >= 11*gw.get_width()/12:
+        number_of_spaces = new_text.count(" ")
+        if number_of_spaces % 2 != 0:
+            number_of_spaces += 1
+        position_of_midway_space = find_nth(new_text," ",number_of_spaces//2)
+        phrase_first_half = new_text[0:position_of_midway_space]
+        phrase_second_half = new_text[position_of_midway_space:]
+
+
+        phrase_to_draw.set_label(phrase_first_half)
+        phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width())/2,
+                                y = (gw.get_height())/2-15)
+        if backup != None:
+            backup.set_label(phrase_second_half)
+            backup.set_location((gw.get_width() - backup.get_width()) / 2 ,
+                                    y = (gw.get_height()+phrase_to_draw.get_ascent())/2+15)
+    else:
+        phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 ,
+                                    y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
 
 def create_num_picks_button(gw, number_of_picks):
 
@@ -257,15 +291,20 @@ def just_draw_label(gw,x,y,labeltext,font="20pt 'Consolas'",ycorfa = 2, part_of_
 def draw_fun_labels(gw,info):
     fun_label_1 = just_draw_label(gw, gw.get_width()+11, info.get_y() + info.get_height()+10,"PLAYING FOR FUN:")
     fun_label_2 = just_draw_label(gw, gw.get_width()+11, fun_label_1.get_y() + fun_label_1.get_height()+10,"> Set the timer in the lower left corner.")
-    fun_label_3 = just_draw_label(gw, gw.get_width()+11, fun_label_2.get_y() + fun_label_2.get_height()+10,"> Click the screen, and a phrase will appear.")
-    fun_label_4 = just_draw_label(gw, gw.get_width()+11, fun_label_3.get_y() + fun_label_3.get_height()+10,"> Remember your phrase, click again to hide your phrase.")
-    fun_label_5 = just_draw_label(gw, gw.get_width()+11, fun_label_4.get_y() + fun_label_4.get_height()+10,"> Pass the device to the next person.")
-    fun_label_6 = just_draw_label(gw, gw.get_width()+11, fun_label_5.get_y() + fun_label_5.get_height()+10,"> Start the timer after all players have a phrase.")
-    fun_label_7 = just_draw_label(gw, gw.get_width()+11, fun_label_6.get_y() + fun_label_6.get_height()+10,"> Once the timer is up, guess other players' phrases!")
-    for fun_label in [fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7]:
+    fun_label_3 = just_draw_label(gw, gw.get_width()+11, fun_label_2.get_y() + fun_label_2.get_height()+10,"> Set the phrase length in the top right corner.")
+    fun_label_4 = just_draw_label(gw, gw.get_width()+11, fun_label_3.get_y() + fun_label_3.get_height()+10,"> Click the screen, and a phrase will appear.")
+    fun_label_5 = just_draw_label(gw, gw.get_width()+11, fun_label_4.get_y() + fun_label_4.get_height()+10,"> Remember your phrase, click again to hide your phrase.")
+    fun_label_6 = just_draw_label(gw, gw.get_width()+11, fun_label_5.get_y() + fun_label_5.get_height()+10,"> Pass the device to the next person.")
+    fun_label_7 = just_draw_label(gw, gw.get_width()+11, fun_label_6.get_y() + fun_label_6.get_height()+10,"> Start the timer after all players have a phrase.")
+    fun_label_8 = just_draw_label(gw, gw.get_width()+11, fun_label_7.get_y() + fun_label_7.get_height()+10,"> Once the timer is up, guess other players' phrases!")
+    nothinglabel = just_draw_label(gw, gw.get_width()+11, fun_label_8.get_y() + fun_label_8.get_height()+10,"")
+    glory_label_1 = just_draw_label(gw, gw.get_width()+11, nothinglabel.get_y() + nothinglabel.get_height()+10,"PLAYING FOR GLORY:")
+    glory_label_2 = just_draw_label(gw, gw.get_width()+11, glory_label_1.get_y() + glory_label_1.get_height()+10,"> Set the timer and phrase length, then click the screen as above.")
+    glory_label_3 = just_draw_label(gw, gw.get_width()+11, glory_label_2.get_y() + glory_label_2.get_height()+10,"> Everyone draws the same phrase.")
+    glory_label_4 = just_draw_label(gw, gw.get_width()+11, glory_label_3.get_y() + glory_label_3.get_height()+10,"> Whoever\'s drawing is the best wins!")
+    glory_label_5 = just_draw_label(gw, gw.get_width()+11, glory_label_4.get_y() + glory_label_4.get_height()+10,"> (What \"the best\" means is up to the players.)")
+    for fun_label in [fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7,fun_label_8, nothinglabel, glory_label_1,glory_label_2,glory_label_3,glory_label_4,glory_label_5]:
                 fun_label.set_color("#FEFEFE")
-    return(fun_label_1,fun_label_2,fun_label_3,fun_label_4,fun_label_5,fun_label_6,fun_label_7)
-
-
+    return(fun_label_1,fun_label_2,fun_label_3,fun_label_4,fun_label_5,fun_label_6,fun_label_7,fun_label_8,nothinglabel,glory_label_1,glory_label_2,glory_label_3,glory_label_4,glory_label_5)
 
 

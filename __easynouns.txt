@@ -34,7 +34,7 @@ seal
 snail
 crab
 dragon
-seaturtle
+sea turtle
 bat
 iguana
 ray
@@ -51,7 +51,7 @@ cactus
 rat
 cow
 sloth
-guineapig
+guinea pig
 owl
 bat
 donkey

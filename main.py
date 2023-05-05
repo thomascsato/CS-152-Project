@@ -6,7 +6,7 @@ from playsound import playsound
 import random as rng
 from pgl import GWindow, GLine, GOval, GRect, GPolygon, GLabel, GCompound
 from datastructures import Node, LinkedList, Stack, clear_linkedlist, is_in_linkedlist, shuffle_and_fill
-from pglstuff import Timerclass, mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label, draw_gw_button_xywhLCFfc, flip_over_vertical_screen_edge, just_draw_label, draw_fun_labels
+from pglstuff import Timerclass, mode_switch_button, base_frame, create_num_picks_button, create_n_choices, center_phrase_to_draw, phrase_label_and_backup, draw_gw_button_xywhLCFfc, flip_over_vertical_screen_edge, just_draw_label, draw_fun_labels
 
 import os
 import math
@@ -14,7 +14,6 @@ import time as tmr
 
 cwd = os.getcwd()  # Get the current working directory (cwd)
 # print(f"{cwd}")
-
 
 
 # Constants
@@ -30,7 +29,7 @@ TIME_STEP = 500
 
 gw = GWindow(GWINDOW_WIDTH,GWINDOW_HEIGHT)
 
-def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs):
+def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs, actions):
     global phrase_to_draw
     global ready_to_show    
 
@@ -161,7 +160,15 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
     shuffle_and_fill(mediumadjstack, adj_list_takeout[1])
     shuffle_and_fill(hardadjstack, adj_list_takeout[2])
 
+    global action_list_putback
+    global action_list_takeout
+    action_list_putback = read_word_bag(actions)
+    action_list_takeout = read_word_bag(actions)
+    actionstack = Stack()
+    shuffle_and_fill(actionstack, action_list_putback)
 
+
+    Active_Phrase_Actions = LinkedList()
     Active_Phrase_Adjectives = LinkedList()
     Active_Phrase_Nouns = LinkedList()
     
@@ -177,7 +184,7 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
     n_change_frame = base_frame(gw, modebutton)
     summon_num_change_UI_button, n_picks_visualized = create_num_picks_button(gw, number_of_picks)
     numberchoices, num_buttons = create_n_choices(gw, n_change_frame)
-    phrase_to_draw = phrase_label(gw)
+    phrase_to_draw,backup = phrase_label_and_backup(gw)
 
     difficulty_button, difficulty_label = draw_gw_button_xywhLCFfc(gw,2,2,summon_num_change_UI_button.get_width()*1.5,summon_num_change_UI_button.get_height(),"MEDIUM","#FFF200","30pt 'Consolas'")
 
@@ -188,8 +195,8 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
     nightlight_button, nightlight_label = draw_gw_button_xywhLCFfc(gw,rules_button.get_x()-100,GWINDOW_HEIGHT-50,87,Timer_on_Screen._Timerlabel.get_height()/2+2,"LIGHT","lightgrey","15pt 'Consolas'")
 
     info_label.set_location(info_label.get_x(), 1+info_label.get_height())
-    fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7= draw_fun_labels(gw,info_label)
-    
+    fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7, fun_label_8, nothinglabel, glory_label_1,glory_label_2,glory_label_3,glory_label_4,glory_label_5= draw_fun_labels(gw,info_label)
+    combined_rules_labels_fun_and_glory = [fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7, fun_label_8, nothinglabel, glory_label_1,glory_label_2,glory_label_3,glory_label_4,glory_label_5]
 
 
 
@@ -204,16 +211,20 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
         element = gw.get_element_at(e.get_x(),e.get_y())
 
         def determine_phrase_takeout(difficulty_level):
+            clear_linkedlist(Active_Phrase_Actions)
+
             global number_of_picks
             if difficulty_level == 0:
                 adjectivestack = easyadjstack
                 nounstack = easynounstack
-            elif difficulty_level == 1:
+            elif difficulty_level == 1 or difficulty_level == "ACTING":
                 adjectivestack = mediumadjstack
                 nounstack = mediumnounstack
+
             else:
                 adjectivestack = hardadjstack
                 nounstack = hardnounstack
+
             if number_of_picks == "R":  # Chooses a random number from 2-9 for the number of picks
                 number_of_picks = rng.randint(2,9)
                 set_back_to_R_ping = True
@@ -225,9 +236,21 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
                 set_back_to_R_ping = False
 
             if number_of_picks > 1: 
-                adjective = refill_if_empty_then_pop(adjectivestack, adj_list) # Takes an adjective out of the stack
-                Active_Phrase_Adjectives.append(Node(adjective)) # Adds the adjective to the linked list
-                adj_list.append(adjective) # Appends the adjective to adj_list to keep track of which ones were used
+                if difficulty_level == "ACTING":
+                    there_is_an_action_tf = True
+                else:
+                    there_is_an_action_tf = rng.choice([True,False])
+                    
+                    
+
+                if there_is_an_action_tf:
+                    action = refill_if_empty_then_pop(actionstack,action_list_takeout)
+                    Active_Phrase_Actions.append(Node(action))
+                    action_list_takeout.append(action)
+                else:
+                    adjective = refill_if_empty_then_pop(adjectivestack, adj_list) # Takes an adjective out of the stack
+                    Active_Phrase_Adjectives.append(Node(adjective)) # Adds the adjective to the linked list
+                    adj_list.append(adjective) # Appends the adjective to adj_list to keep track of which ones were used
 
             noun = refill_if_empty_then_pop(nounstack,noun_list_takeout)
             Active_Phrase_Nouns.append(Node(noun))
@@ -237,7 +260,11 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
 
                 # For more than two words, this will choose randomly how many of the in-between words are adjectives or nouns
                 for n in range(int(number_of_picks) - 2):
-                    adj_or_n = rng.choice(["adj","n"])
+                    
+                    if difficulty_level == "ACTING":
+                        adj_or_n = rng.choice(["adj","adj","adj","adj","adj","adj","adj","adj","adj","adj","adj","n"])
+                    else:
+                        adj_or_n = rng.choice(["adj","n"])
                     
                     if adj_or_n == "adj":
                         adjective = refill_if_empty_then_pop(adjectivestack,adj_list_takeout)
@@ -254,6 +281,13 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
             while curnode != None:
                 Active_Phrase_Adjectives.append(curnode)
                 curnode = curnode.get_next()
+
+            curnode = Active_Phrase_Actions.head
+            if curnode != None:
+                Active_Phrase_Adjectives.append(Node("that is"))
+                while curnode != None:
+                    Active_Phrase_Adjectives.append(curnode)
+                    curnode = curnode.get_next()
 
             if set_back_to_R_ping:
                 number_of_picks = "R"
@@ -279,18 +313,19 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
                     current = (current+1) % len(colorlist)
                     label_or_button.set_fill_color(colorlist[current])
            
-
-
         def determine_phrase_putback(difficulty_level):
             global number_of_picks
             global adj_list_putback
             global noun_list_putback
+            global action_list_putback
             
 
             if noun_list_putback[0]==[]:
                 noun_list_putback[0]= read_word_bag(easynouns)
                 noun_list_putback[1]= read_word_bag(mediumnouns) + noun_list_putback[0]
                 noun_list_putback[2]= read_word_bag(hardnouns) + noun_list_putback[1]
+            if action_list_putback == []:
+                action_list_putback = read_word_bag(actions)
             
             
             
@@ -361,23 +396,42 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
             n_picks_visualized.set_label(number_of_picks)
 
         if element == modebutton or element == modelabel:
-
+            global difficulty_before_changing_modes
             # Once the button or label for the mode is clicked, the mode is switched
-            if modelabel.get_label() == "PUTBACK MODE":
+            
+            if modelabel.get_label()== "TAKEOUT MODE":
+                modelabel.set_label("PUTBACK MODE")
+                modebutton.set_fill_color("GreenYellow")
+                n_change_frame.set_fill_color("GreenYellow")
+            
+
+            elif modelabel.get_label() == "PUTBACK MODE":
+                modelabel.set_label("CHARADE MODE")
+                modebutton.set_fill_color("Plum")
+                n_change_frame.set_fill_color("Plum")
+                global difficulty_before_changing_modes
+                difficulty_before_changing_modes = difficulty_label.get_label()
+                difficulty_button.set_fill_color("Plum")
+                difficulty_label.set_label("ACTING")
+                number_of_picks = 2
+                n_picks_visualized.set_label("2")
+
+            else:
+                
                 modelabel.set_label("TAKEOUT MODE")
                 modebutton.set_fill_color("Aquamarine")
                 n_change_frame.set_fill_color("Aquamarine")
 
-            else:
-                modelabel.set_label("PUTBACK MODE")
-                modebutton.set_fill_color("GreenYellow")
-                n_change_frame.set_fill_color("GreenYellow")
-
+                difficulty_label.set_label(difficulty_before_changing_modes)
+                pos = [" EASY ", "MEDIUM", " HARD "].index(difficulty_before_changing_modes)
+                difficulty_button.set_fill_color(["#50DF78","#FFF200","#F1595F"][pos])
+                
         # (/'^')/ Praise be to the ELIF CHAIN \('^'\)       
 
         elif element == difficulty_button or element == difficulty_label:
-            cycle_text_and_color(difficulty_label,[" EASY ", "MEDIUM", " HARD "], ["#000000","#000000","#000000"])
-            cycle_text_and_color(difficulty_button,["BUTTON"], ["#50DF78","#FFF200","#F1595F"],False)
+            if difficulty_label.get_label() != "ACTING":
+                cycle_text_and_color(difficulty_label,[" EASY ", "MEDIUM", " HARD "], ["#000000","#000000","#000000"])
+                cycle_text_and_color(difficulty_button,["BUTTON"], ["#50DF78","#FFF200","#F1595F"],False)
 
         elif element == auto_button or element == auto_label:
             
@@ -404,7 +458,7 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
                 flip_over_vertical_screen_edge(gw,info_label)
                 flip_over_vertical_screen_edge(gw,info_menu)
                 cycle_text_and_color(rules_label, [" INFO "," EXIT "], ["#000000","#f0000f"])
-                for fun_label in [fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7]:
+                for fun_label in combined_rules_labels_fun_and_glory:
                     flip_over_vertical_screen_edge(gw,fun_label)
             
         elif element == nightlight_button or element == nightlight_label:
@@ -434,7 +488,7 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
                     Timer_on_Screen._Timerlabel.set_color("#fefefe")
 
             cycle_text_and_color(info_label, [f"{info_label.get_label()}"], ["#000000","#FEFEFE"])
-            for fun_label in [fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7]:
+            for fun_label in combined_rules_labels_fun_and_glory:
                 cycle_text_and_color(fun_label, ["MADE BY EVAN WYLIE, THOMAS SATO, AND HRIDAY RAJ"],["#000000","#FEFEFE"])
 
             cycle_text_and_color(nightlight_label,["NIGHT","LIGHT"],["#000000","#000000"])
@@ -504,14 +558,19 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
             number_of_picks = element.get_label()
             flip_n_change_frame_and_num_buttons()
             
-        elif ready_to_show and (element == None or element == background):
-            difficulty_level = [" EASY ", "MEDIUM", " HARD "].index(difficulty_label.get_label())
+        elif ready_to_show and (element == background or element == phrase_to_draw or element == backup or element == None):
+            if difficulty_label.get_label() != "ACTING":
+                difficulty_level = [" EASY ", "MEDIUM", " HARD "].index(difficulty_label.get_label())
+            else:
+                difficulty_level = "ACTING"
 
             # If you click the screen anywhere else, it will run this algorithm and put text on the screen
             if modelabel.get_label() == "TAKEOUT MODE":
                 Active_Phrase_Total = determine_phrase_takeout(difficulty_level)
-            else:
+            elif modelabel.get_label() == "PUTBACK MODE":
                 Active_Phrase_Total = determine_phrase_putback(difficulty_level)
+            else:
+                Active_Phrase_Total = determine_phrase_takeout("ACTING")
             curnode = Active_Phrase_Total.head
             
             
@@ -526,8 +585,8 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
                 curnode = curnode.next
 
             phrasetext.removesuffix(" ")
-            center_phrase_to_draw(gw, phrase_to_draw, phrasetext)
-
+            center_phrase_to_draw(gw, phrase_to_draw, phrasetext,backup)
+            
 
             # Flag that indicates whether text is already on the screen or not is set to False
             ready_to_show = False
@@ -540,6 +599,7 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs)
             # Flag that indicates whether text is already on the screen or not is set to True
             ready_to_show = True
             phrase_to_draw.set_label(" ")
+            backup.set_label(" ")
 
     gw.add_event_listener("click", click_action)
 
@@ -562,4 +622,4 @@ def read_word_bag(f):
     return list
 
 if __name__ == "__main__":
-    what_are_those("__easynouns.txt","__mediumnouns.txt","_hardnouns.txt", "_x_easyadjectives.txt", "_x_mediumadjectives.txt", "_xhardadjectives.txt")
+    what_are_those("__easynouns.txt","__mediumnouns.txt","_hardnouns.txt", "_x_easyadjectives.txt", "_x_mediumadjectives.txt", "_xhardadjectives.txt", "dostuff.txt")

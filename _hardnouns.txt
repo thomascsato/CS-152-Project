@@ -1,4 +1,4 @@
-propellerplane
+propeller plane
 motorcycle
 armor
 president
@@ -8,8 +8,17 @@ clock
 virus
 racecar
 bus
-towtruck
+tow truck
 barrel
 safe
 rug
-microwaveoven
+microwave oven
+anomalocaris
+velvet worm
+dimetrodon
+muskellunge
+fossa
+hagfish
+mola mola
+sea anenome
+blobfish
