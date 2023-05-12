@@ -1,0 +1,115 @@
+alligator
+tortoise
+dolphin
+squid
+ferret
+mole
+moth
+capybara
+toad
+newt
+hawk
+crocodile
+pig
+horse
+dragonfly
+platypus
+otter
+eel
+orca
+anteater
+panda
+whale shark
+scarab
+hermit crab
+cobra
+mongoose
+llama
+mantis shrimp
+tank
+mecha
+jet plane
+venus flytrap
+walrus
+hedgehog
+plesiosaur
+chamelion
+gecko
+sea cucumber
+hummingbird
+T.rex
+raptor
+triceratops
+pteranodon
+pufferfish
+catfish
+groundhog
+cicada
+warrior
+clam
+palm tree
+parrot
+albatross
+amargasaurus
+angler fish
+archaeopteryx
+aye-aye
+antelope
+moose
+tarantula
+sturgeon
+basking shark
+vulture
+bobcat
+basilisk
+kingfisher
+python
+peafowl
+monitor lizard
+brachiosaurus
+caracal
+cheetah
+chinchilla
+salmon
+cuttlefish
+crow
+corgi
+dodo
+eagle
+puffin
+firefly
+gargoyle
+gila monster
+woodpecker
+horseshoe crab
+jerboa
+leech
+lionfish
+mosasaurus
+trilobite
+axolotl
+barnacle
+hyena
+coconut crab
+cassowary
+narwhal
+wobbegong
+turkey
+orangutan
+ostrich
+sawfish
+slug
+spinosaurus
+skate
+seahorse
+sperm whale
+scarecrow
+crane
+sea urchin
+tuatara
+fungus
+among us
+boar
+gnu
+wombat
+yeti crab

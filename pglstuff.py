@@ -1,3 +1,4 @@
+import math
 from pgl import GWindow, GLine, GOval, GRect, GPolygon, GLabel, GCompound
 
 # Window Dimensions
@@ -276,7 +277,6 @@ def draw_gw_button_xywhLCFfc(gw,x=0,y=0,width=10,height=10,labeltext = "",color=
 
     return (button, label)
 
-
 def just_draw_label(gw,x,y,labeltext,font="20pt 'Consolas'",ycorfa = 2, part_of_something_greater = False):
     label = GLabel(labeltext)
     label.set_font(font)
@@ -307,4 +307,88 @@ def draw_fun_labels(gw,info):
                 fun_label.set_color("#FEFEFE")
     return(fun_label_1,fun_label_2,fun_label_3,fun_label_4,fun_label_5,fun_label_6,fun_label_7,fun_label_8,nothinglabel,glory_label_1,glory_label_2,glory_label_3,glory_label_4,glory_label_5)
 
+def draw_save_icon(gw,TLC_x = 0, TLC_y = 0, color = ["#c61111","#0XC3224"], scale_factor = 1):
+    scale_factor = int(scale_factor)
+    backdimension = 40 * scale_factor
+    saveicon = GCompound()
+    back = GPolygon()
+    back.add_vertex(-backdimension/2,-backdimension/2)
+    back.add_polar_edge(backdimension-6*scale_factor,0)
+    back.add_edge(6*scale_factor,8*scale_factor)
+    back.add_polar_edge(backdimension-8*scale_factor,-90)
+    back.add_polar_edge(-backdimension,0)
+    
+    back.set_color("#000000")
+    back.set_filled(True)
+    back.set_fill_color(color[0])
+    saveicon.add(back)
+    
+    
 
+
+
+    top_rectangle = GRect(-10,-18,20,14)
+    top_rectangle.set_fill_color("#95cadc")
+    top_rectangle.set_filled(True)
+    saveicon.add(top_rectangle)
+
+    bottom_rectangle = GRect(-17,1,34,16)
+    bottom_rectangle.set_fill_color(color[1])
+    bottom_rectangle.set_filled(True)
+    saveicon.add(bottom_rectangle)  
+
+    little_rectangle = GRect(4,-16,4,10)
+    little_rectangle.set_fill_color("#fcfcfc")
+    little_rectangle.set_filled(True)
+    saveicon.add(little_rectangle)  
+
+
+    gw.add(saveicon)
+    saveicon.set_location(TLC_x,TLC_y)
+
+    savelabel = GLabel("phrase saved!")
+    savelabel.set_location(TLC_x,gw.get_height()+100)
+
+
+    return saveicon, savelabel
+    
+colorsetups = [["#c61111","#daf6ff"],
+               ["#132ed2","#daf6ff"],
+               ["#11802d","#daf6ff"],
+               ["#ee54bb","#daf6ff"],
+               ["#f07d0d","#daf6ff"],
+               ["#f6f657","#daf6ff"],
+               ["#3f474e","#daf6ff"],
+               ["#d7e1f1","#daf6ff"],
+               ["#6b2fbc","#daf6ff"],
+               ["#71491e","#daf6ff"],
+               ["#38ffdd","#daf6ff"],
+               ["#50f039","#daf6ff"],
+               ["#5f1d2e","#daf6ff"],
+               ["#ecc0d3","#daf6ff"],
+               ["#ffffbe","#d2bc89"],# light yellow
+               ["#758593","#daf6ff"],
+               ["#918877","#daf6ff"],
+               ["#d76464","#daf6ff"]]
+
+def draw_all_save_icons_and_background(gw,phrase_to_draw):
+    saved_label_list = []
+    save_icon_list = []
+    horizontal_shim1 = 6
+    save_background = GRect(3*gw.get_width()/16-horizontal_shim1,gw.get_height(),44*len(colorsetups)+horizontal_shim1*2,-gw.get_height()/10+14)
+    save_background.set_filled(True)
+    save_background.set_fill_color("#9a9a9a")
+    gw.add(save_background)
+
+    saves_base = save_background.get_x()+4
+
+    for number in range(len(colorsetups)):
+        index = number
+
+        saveicon,saved_label = draw_save_icon(gw,saves_base+24+(index)*44,720,colorsetups[index])
+        save_icon_list.append(saveicon)
+        saved_label.set_font(phrase_to_draw.get_font())
+        saved_label.set_color(phrase_to_draw.get_color())
+        saved_label_list.append(saved_label)
+
+    return(save_background,save_icon_list,saved_label_list)
