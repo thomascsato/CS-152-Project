@@ -546,29 +546,29 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
             cycle_text_and_color(phrase_to_draw, [" :) "], ["#000000","#FEFEFE"])
 
         elif element in save_icon_list:
-
+            if Timer_on_Screen._ticking == False:
             
-            corresponding_label_to_save_icon = saved_label_list[save_icon_list.index(element)]
+                corresponding_label_to_save_icon = saved_label_list[save_icon_list.index(element)]
 
-            if phrase_to_draw.get_label() == "" or phrase_to_draw.get_label() == phrase_saved or phrase_to_draw.get_label() == " ":
+                if phrase_to_draw.get_label() == "" or phrase_to_draw.get_label() == phrase_saved or phrase_to_draw.get_label() == " ":
 
-                if type(corresponding_label_to_save_icon) is GLabel and corresponding_label_to_save_icon.get_label() != "" and corresponding_label_to_save_icon.get_label() != phrase_saved:
-                    phrase_to_draw.set_label(corresponding_label_to_save_icon.get_label())
-                    something_saved_label.set_label(f"{int(something_saved_label.get_label())-1}")
-                    corresponding_label_to_save_icon.set_label(phrase_saved)
-                
-
+                    if type(corresponding_label_to_save_icon) is GLabel and corresponding_label_to_save_icon.get_label() != "" and corresponding_label_to_save_icon.get_label() != phrase_saved:
+                        phrase_to_draw.set_label(corresponding_label_to_save_icon.get_label())
+                        something_saved_label.set_label(f"{int(something_saved_label.get_label())-1}")
+                        corresponding_label_to_save_icon.set_label(phrase_saved)
                     
 
+                        
 
-            elif phrase_to_draw.get_label() != "cleared saves!":
-                    something_saved_label.set_label(f"{int(something_saved_label.get_label())+1}")
-                    holding_a_phrase_for_a_moment = phrase_to_draw.get_label()
-                    phrase_to_draw.set_label(phrase_saved)
-                    corresponding_label_to_save_icon.set_label(holding_a_phrase_for_a_moment)
-                    
 
-            phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 , y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
+                elif phrase_to_draw.get_label() != "cleared saves!":
+                        something_saved_label.set_label(f"{int(something_saved_label.get_label())+1}")
+                        holding_a_phrase_for_a_moment = phrase_to_draw.get_label()
+                        phrase_to_draw.set_label(phrase_saved)
+                        corresponding_label_to_save_icon.set_label(holding_a_phrase_for_a_moment)
+                        
+
+                phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 , y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
 
         # elif element == next_player_button or element == next_player_label:
         #     global next_player_phrase
@@ -589,23 +589,23 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
         #                 phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 , y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
 
 
-            phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 , y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
-            if phrase_to_draw.get_label() != "":
-                ready_to_show = False
-            else:
-                ready_to_show = True
+                if phrase_to_draw.get_label() != "":
+                    ready_to_show = False
+                else:
+                    ready_to_show = True
 
         elif element == clear_player_button or element == clear_player_label:
-            for label in saved_label_list:
-                label.set_label(phrase_saved)
-            something_saved_label.set_label("0")
-            phrase_to_draw.set_label("cleared saves!")
-            phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 , y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
+            if Timer_on_Screen._ticking == False:
+                for label in saved_label_list:
+                    label.set_label(phrase_saved)
+                something_saved_label.set_label("0")
+                phrase_to_draw.set_label("cleared saves!")
+                phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 , y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
 
-            if phrase_to_draw.get_label() != "":
-                ready_to_show = False
-            else:
-                ready_to_show = True
+                if phrase_to_draw.get_label() != "":
+                    ready_to_show = False
+                else:
+                    ready_to_show = True
 
         elif type(element) == GCompound:
 
