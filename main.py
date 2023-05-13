@@ -382,9 +382,13 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
 
             if number_of_picks > 1: 
                 
-
-                adjective = rng.choice(adj_list_putback[difficulty_level]) # Takes an adjective out of the stack
-                Active_Phrase_Adjectives.append(Node(adjective)) # Adds the adjective to the linked list
+                adj_or_action = rng.choice(["adj","action"])
+                if adj_or_action == "adj":
+                    adjective = rng.choice(adj_list_putback[difficulty_level]) # Takes an adjective from the list
+                    Active_Phrase_Adjectives.append(Node(adjective)) # Adds the adjective to the linked list
+                elif adj_or_action == "action":
+                    action = rng.choice(action_list_putback) # Takes an action from the list
+                    Active_Phrase_Actions.append(Node(action)) # Adds the adjective to the linked list
                 
 
             noun = rng.choice(noun_list_putback[difficulty_level])
@@ -410,15 +414,23 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                            noun = rng.choice(noun_list_putback[difficulty_level]) 
                         Active_Phrase_Nouns.append(Node(noun))
 
-
+            
             # Adds the nouns to the adjectives in order to have the full phrase there
             curnode = Active_Phrase_Nouns.head
             while curnode != None:
                 Active_Phrase_Adjectives.append(curnode)
                 curnode = curnode.get_next()
 
+            curnode = Active_Phrase_Actions.head
+            if curnode != None:
+                Active_Phrase_Adjectives.append(Node("that is"))
+                while curnode != None:
+                    Active_Phrase_Adjectives.append(curnode)
+                    curnode = curnode.get_next()
+            
             if set_back_to_R_ping:
                 number_of_picks = "R"
+
 
             return Active_Phrase_Adjectives # Returns the full phrase with the adjectives + nouns
 
@@ -706,7 +718,7 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
 
         else:
 
-            for list in [Active_Phrase_Adjectives, Active_Phrase_Nouns]:
+            for list in [Active_Phrase_Adjectives, Active_Phrase_Nouns, Active_Phrase_Actions]:
                 clear_linkedlist(list)
 
             # Flag that indicates whether text is already on the screen or not is set to True
