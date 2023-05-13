@@ -289,7 +289,7 @@ def just_draw_label(gw,x,y,labeltext,font="20pt 'Consolas'",ycorfa = 2, part_of_
     return label
 
 def draw_fun_labels(gw,info):
-    fun_label_1 = just_draw_label(gw, gw.get_width()+11, info.get_y() + info.get_height()+10,"PLAYING FOR FUN:")
+    fun_label_1 = just_draw_label(gw, gw.get_width()+11, info.get_y() + info.get_height()+10,"PLAYING, SOLO STYLE:")
     fun_label_2 = just_draw_label(gw, gw.get_width()+11, fun_label_1.get_y() + fun_label_1.get_height()+10,"> Set the timer in the lower left corner.")
     fun_label_3 = just_draw_label(gw, gw.get_width()+11, fun_label_2.get_y() + fun_label_2.get_height()+10,"> Set the phrase length in the top right corner.")
     fun_label_4 = just_draw_label(gw, gw.get_width()+11, fun_label_3.get_y() + fun_label_3.get_height()+10,"> Click the screen, and a phrase will appear.")
@@ -298,7 +298,7 @@ def draw_fun_labels(gw,info):
     fun_label_7 = just_draw_label(gw, gw.get_width()+11, fun_label_6.get_y() + fun_label_6.get_height()+10,"> Start the timer after all players have a phrase.")
     fun_label_8 = just_draw_label(gw, gw.get_width()+11, fun_label_7.get_y() + fun_label_7.get_height()+10,"> Once the timer is up, guess other players' phrases!")
     nothinglabel = just_draw_label(gw, gw.get_width()+11, fun_label_8.get_y() + fun_label_8.get_height()+10,"")
-    glory_label_1 = just_draw_label(gw, gw.get_width()+11, nothinglabel.get_y() + nothinglabel.get_height()+10,"PLAYING FOR GLORY:")
+    glory_label_1 = just_draw_label(gw, gw.get_width()+11, nothinglabel.get_y() + nothinglabel.get_height()+10,"PLAYING, ALLPLAY STYLE:")
     glory_label_2 = just_draw_label(gw, gw.get_width()+11, glory_label_1.get_y() + glory_label_1.get_height()+10,"> Set the timer and phrase length, then click the screen as above.")
     glory_label_3 = just_draw_label(gw, gw.get_width()+11, glory_label_2.get_y() + glory_label_2.get_height()+10,"> Everyone draws the same phrase.")
     glory_label_4 = just_draw_label(gw, gw.get_width()+11, glory_label_3.get_y() + glory_label_3.get_height()+10,"> Whoever\'s drawing is the best wins!")
