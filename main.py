@@ -33,7 +33,10 @@ gw = GWindow(GWINDOW_WIDTH,GWINDOW_HEIGHT)
 
 
 
-def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs, actions):
+def what_are_those(easynouns, mediumnouns, hardnouns, easyadjs, mediumadjs, hardadjs, actions):
+    # This is the main function that is called for the program to run
+
+    # First initializing all relevant variables
     global next_player_index
     global phrase_to_draw
     global ready_to_show
@@ -41,19 +44,17 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
     global holding_a_phrase_for_a_moment
     global next_player_phrase
 
-
     acting_question_mark = False    
     holding_a_phrase_for_a_moment = ""
     next_player_index = 0
     next_player_phrase = ""
 
+    # Create background to set to dark mode as default
     background = GRect(0,0,GWINDOW_WIDTH,GWINDOW_HEIGHT)
     background.set_filled(True)
     background.set_fill_color("#1e1e1e")
     background.set_color("#1e1e1e")
     gw.add(background)
-
-
 
     # Create Timer
     Timer_on_Screen = Timerclass()
@@ -61,57 +62,65 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
     Timer_on_Screen._compound.set_location(GWINDOW_WIDTH/10-0.5*Timer_on_Screen._Timerlabel.get_width(),5*GWINDOW_HEIGHT/6-6)
 
     def stop_time(self):
+        # This will stop the timer, and is called when the timer hits 00:00
+
         global num_change_TF
         global countdown
+
         if Timer_on_Screen != None:
             num_change_TF = True
             Timer_on_Screen._ticking = False
             Timer_on_Screen.play_pause()
             Timer_on_Screen._Timerlabel.set_color(self._unred)
 
-    def incr_decr(Timerlabel1,secs = 1,increasing=True):
-            Timerlabel_separated = Timerlabel1.get_label().split(":")
-            Timerlabel_mins = int(Timerlabel_separated[0])
-            Timerlabel_secs = int(Timerlabel_separated[1])
+    def incr_decr(Timerlabel1, secs = 1, increasing = True):
+        # When called, increases or decreases the timer by 1
 
-            if increasing:
-                Timerlabel_secs += secs
+        Timerlabel_separated = Timerlabel1.get_label().split(":")
+        Timerlabel_mins = int(Timerlabel_separated[0])
+        Timerlabel_secs = int(Timerlabel_separated[1])
 
+        if increasing:
+            Timerlabel_secs += secs
+
+        else:
+            Timerlabel_secs -= secs
+
+        if not 0 <= Timerlabel_secs <= 59:
+            if Timerlabel_secs > 59:
+                Timerlabel_mins += Timerlabel_secs // 60
+                Timerlabel_secs = Timerlabel_secs %60
             else:
-                Timerlabel_secs -= secs
+                Timerlabel_mins += Timerlabel_secs // 60
+                Timerlabel_secs = (Timerlabel_secs) %60
+        if not 0 <= Timerlabel_mins <= 59:
+            if Timerlabel_mins > 59:
+                Timerlabel_mins = Timerlabel_mins %60
+            else:
+                Timerlabel_mins = (60 + Timerlabel_mins)
+                Timerlabel_secs = (Timerlabel_secs) %60
 
-                
-
-            if not 0 <= Timerlabel_secs <= 59:
-                if Timerlabel_secs > 59:
-                    Timerlabel_mins += Timerlabel_secs // 60
-                    Timerlabel_secs = Timerlabel_secs %60
-                else:
-                    Timerlabel_mins += Timerlabel_secs // 60
-                    Timerlabel_secs = (Timerlabel_secs) %60
-            if not 0 <= Timerlabel_mins <= 59:
-                if Timerlabel_mins > 59:
-                    Timerlabel_mins = Timerlabel_mins %60
-                else:
-                    Timerlabel_mins = (60 + Timerlabel_mins)
-                    Timerlabel_secs = (Timerlabel_secs) %60
-
-            newtime = []
-            for time_part in [Timerlabel_mins,Timerlabel_secs]:
-                
-                time_part = str(time_part)
-                if len(time_part) == 1:
-                    time_part = f"0{time_part}"
-                newtime.append(time_part)
-     
+        newtime = []
+        for time_part in [Timerlabel_mins,Timerlabel_secs]:
             
-            return f"{newtime[0]}:{newtime[1]}"
+            time_part = str(time_part)
+
+            if len(time_part) == 1:
+                time_part = f"0{time_part}"
+
+            newtime.append(time_part)
+    
+        return f"{newtime[0]}:{newtime[1]}"
 
     def step():
         global num_change_TF
         global countdown
+
+        # First, if the game is not in charades mode, the timer blinks
         if Timer_on_Screen._Timerlabel.get_label() != "??:??":
             Timer_on_Screen.blink()
+
+            # Then, once the timer hits 00:00, the timer is stopped and the sound is played
             if Timer_on_Screen._Timerlabel.get_label() == "00:00":
                 
                 stop_time(Timer_on_Screen)
@@ -120,17 +129,14 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                 # pip install playsound==1.2.2
                 playsound(f"{cwd}\\watsound.mp3", False)
             
-            
             else:
                 
                 if num_change_TF:
-                    Timer_on_Screen._Timerlabel.set_label(incr_decr(Timer_on_Screen._Timerlabel,1,False))
+                    Timer_on_Screen._Timerlabel.set_label(incr_decr(Timer_on_Screen._Timerlabel, 1, False))
                     num_change_TF = False
+
                 else:
                     num_change_TF = True
-
-
-    # Initializes the stack of nouns, shuffles the order of words
 
     difficulty_levels = [[easynouns,easyadjs],[mediumnouns,mediumadjs],[hardnouns,hardadjs]]
     # FORMAT [[noun text file name, adjective text file name]]
@@ -143,11 +149,7 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
         level[0] = noun_list[:]
         level[1] = adj_list[:]
 
-
-
-        
     # FORMAT [[noun list, adjective list]]
-
 
     # Initializes the stacks of nouns, shuffles the order of words
     global noun_list_putback
@@ -170,8 +172,6 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
     mediumadjstack = Stack()
     hardadjstack = Stack()
 
-
-
     shuffle_and_fill(easyadjstack, adj_list_takeout[0])
     shuffle_and_fill(mediumadjstack, adj_list_takeout[1])
     shuffle_and_fill(hardadjstack, adj_list_takeout[2])
@@ -182,7 +182,6 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
     action_list_takeout = read_word_bag(actions)
     actionstack = Stack()
     shuffle_and_fill(actionstack, action_list_putback)
-
 
     Active_Phrase_Actions = LinkedList()
     Active_Phrase_Adjectives = LinkedList()
@@ -196,17 +195,19 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
 
         return(stack.pop())
 
+    # This chunk of code here is the initialization of all of the GObjects that are added to the window 
+
     modebutton, modelabel = mode_switch_button(gw)
     n_change_frame = base_frame(gw, modebutton)
     summon_num_change_UI_button, n_picks_visualized = create_num_picks_button(gw, number_of_picks)
     numberchoices, num_buttons = create_n_choices(gw, n_change_frame)
-    phrase_to_draw,backup = phrase_label_and_backup(gw)
+    phrase_to_draw, backup = phrase_label_and_backup(gw)
 
-    difficulty_button, difficulty_label = draw_gw_button_xywhLCFfc(gw,2,2,summon_num_change_UI_button.get_width()*1.5,summon_num_change_UI_button.get_height(),"MEDIUM","#FFF200","30pt 'Consolas'")
+    difficulty_button, difficulty_label = draw_gw_button_xywhLCFfc(gw, 2, 2, summon_num_change_UI_button.get_width()*1.5, summon_num_change_UI_button.get_height(), "MEDIUM", "#FFF200", "30pt 'Consolas'")
 
     zero_button, zero_label = draw_gw_button_xywhLCFfc(gw,Timer_on_Screen._compound.get_x()+155,Timer_on_Screen._compound.get_y()-61,Timer_on_Screen._Timerlabel.get_width()/2,Timer_on_Screen._Timerlabel.get_height()/2+2," ZERO ","lightgrey","15pt 'Consolas'")
     auto_button, auto_label = draw_gw_button_xywhLCFfc(gw,zero_button.get_x(),zero_button.get_y()+50,Timer_on_Screen._Timerlabel.get_width()/2,Timer_on_Screen._Timerlabel.get_height()/2+2," AUTO ","lightgrey","15pt 'Consolas'")
-    save_background,save_icon_list,saved_label_list = draw_all_save_icons_and_background(gw,phrase_to_draw)
+    save_background, save_icon_list, saved_label_list = draw_all_save_icons_and_background(gw, phrase_to_draw)
     saves_bg, SAVES_label = draw_gw_button_xywhLCFfc(gw,GWINDOW_WIDTH/2-87,17*gw.get_height()/20+14,87,Timer_on_Screen._Timerlabel.get_height()/2+2,"SAVES:","Aquamarine","15pt 'Consolas'")
     clear_player_button, clear_player_label = draw_gw_button_xywhLCFfc(gw,saves_bg.get_x()+saves_bg.get_width(),saves_bg.get_y(),Timer_on_Screen._Timerlabel.get_width()/2,Timer_on_Screen._Timerlabel.get_height()/2+2," WIPE ","lightgrey","15pt 'Consolas'")
 
@@ -221,11 +222,6 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
     fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7, fun_label_8, nothinglabel, glory_label_1,glory_label_2,glory_label_3,glory_label_4,glory_label_5= draw_fun_labels(gw,info_label)
     combined_rules_labels_fun_and_glory = [fun_label_1, fun_label_2, fun_label_3, fun_label_4, fun_label_5, fun_label_6, fun_label_7, fun_label_8, nothinglabel, glory_label_1,glory_label_2,glory_label_3,glory_label_4,glory_label_5]
 
-
-    
-    
-
-
     def click_action(e):
         # When the screen is clicked, the following code will run 
         
@@ -236,13 +232,16 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
 
         element = gw.get_element_at(e.get_x(),e.get_y())
 
-
-
         def determine_phrase_takeout(difficulty_level):
+            #For takeout mode, this function determines the phrase to be shown on screen
+
             clear_linkedlist(Active_Phrase_Actions)
 
+            # Number of picks is the number of words to display on the screen
             global number_of_picks
             global acting_question_mark
+
+            # Determines which stacks to use based on difficulty level
             if difficulty_level == "ACTING":
                 acting_question_mark = True
                 difficulty_level = 3
@@ -250,10 +249,10 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
             if difficulty_level == 0:
                 adjectivestack = easyadjstack
                 nounstack = easynounstack
+
             elif difficulty_level == 1 or acting_question_mark:
                 adjectivestack = mediumadjstack
                 nounstack = mediumnounstack
-
 
             else:
                 adjectivestack = hardadjstack
@@ -264,21 +263,20 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                 set_back_to_R_ping = True
                 Timer_on_Screen._Timerlabel.set_label(f"0{number_of_picks}:00")
 
-
             else: # Whatever the number of picks is set at, sets that to the number of picks
                 number_of_picks = int(number_of_picks)
                 set_back_to_R_ping = False
 
             if number_of_picks > 1: 
+
                 if acting_question_mark:
                     there_is_an_action_tf = True
+
                 else:
                     there_is_an_action_tf = rng.choice([True,False])
                     
-                    
-
                 if there_is_an_action_tf:
-                    action = refill_if_empty_then_pop(actionstack,action_list_takeout)
+                    action = refill_if_empty_then_pop(actionstack, action_list_takeout)
                     Active_Phrase_Actions.append(Node(action))
                     action_list_takeout.append(action)
 
@@ -287,12 +285,10 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                     Active_Phrase_Adjectives.append(Node(adjective)) # Adds the adjective to the linked list
                     adj_list_takeout[difficulty_level].append(adjective) # Appends the adjective to adj_list to keep track of which ones were used
 
-
             noun = refill_if_empty_then_pop(nounstack,noun_list_takeout[difficulty_level])
             Active_Phrase_Nouns.append(Node(noun))
             noun_list_takeout[difficulty_level].append(noun)
 
-            
             if number_of_picks > 2:
 
                 # For more than two words, this will choose randomly how many of the in-between words are adjectives or nouns
@@ -300,6 +296,7 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                     
                     if difficulty_level == "ACTING":
                         adj_or_n = rng.choice(["adj","adj","adj","adj","adj","adj","adj","adj","adj","adj","adj","n"])
+
                     else:
                         adj_or_n = rng.choice(["adj","n"])
                     
@@ -308,13 +305,10 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                         Active_Phrase_Adjectives.append(Node(adjective))
                         adj_list_takeout[difficulty_level].append(adjective)
 
-
-
                     else:
                         noun = refill_if_empty_then_pop(nounstack,noun_list_takeout[difficulty_level])
                         Active_Phrase_Nouns.append(Node(noun))
                         noun_list_takeout[difficulty_level].append(noun)
-
 
             # Adds the nouns to the adjectives in order to have the full phrase there
             curnode = Active_Phrase_Nouns.head
@@ -334,21 +328,29 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
 
             return Active_Phrase_Adjectives # Returns the full phrase with the adjectives + nouns
         
-        def cycle_text_and_color(label_or_button, textlist = ["TEST","test"] , colorlist = ["#000000", "red"],label_or_button_is_a_labe1 = True):
+        def cycle_text_and_color(label_or_button, textlist = ["TEST", "test"], colorlist = ["#000000", "red"], label_or_button_is_a_labe1 = True):
+            # When the button for the difficulty is clicked, the text and color of the button will cycle through
+
             if label_or_button_is_a_labe1:
+                
                 if len(textlist) > 1:
                     current = textlist.index(label_or_button.get_label())
+
                     if current != -1:
                         current = (current+1) % len(textlist)
                         label_or_button.set_label(textlist[current])
                         label_or_button.set_color(colorlist[current])
+
                 else:
                     current = colorlist.index(label_or_button.get_color())
+
                     if current != -1:
                         current = (current+1) % len(colorlist)
                         label_or_button.set_color(colorlist[current])
+
             else:
                 current = colorlist.index(label_or_button.get_fill_color())
+
                 if current != -1:
                     current = (current+1) % len(colorlist)
                     label_or_button.set_fill_color(colorlist[current])
@@ -365,16 +367,14 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                 noun_list_putback[1]= read_word_bag(mediumnouns) + noun_list_putback[0]
                 noun_list_putback[2]= read_word_bag(hardnouns) + noun_list_putback[1]
                 noun_list_putback[3]= read_word_bag(mediumnouns) + noun_list_putback[0]
+
             if action_list_putback == []:
                 action_list_putback = read_word_bag(actions)
-            
-            
             
             if number_of_picks == "R":  # Chooses a random number from 2-9 for the number of picks
                 number_of_picks = rng.randint(2,9)
                 set_back_to_R_ping = True
                 Timer_on_Screen._Timerlabel.set_label(f"0{number_of_picks}:00")
-
 
             else: # Whatever the number of picks is set at, sets that to the number of picks
                 number_of_picks = int(number_of_picks)
@@ -390,7 +390,6 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                     action = rng.choice(action_list_putback) # Takes an action from the list
                     Active_Phrase_Actions.append(Node(action)) # Adds the adjective to the linked list
                 
-
             noun = rng.choice(noun_list_putback[difficulty_level])
             Active_Phrase_Nouns.append(Node(noun))
             noun_list.append(noun)
@@ -403,17 +402,19 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                     
                     if adj_or_n == "adj":
                         adjective = rng.choice(adj_list_putback[difficulty_level])
+
                         while is_in_linkedlist(Active_Phrase_Adjectives,adjective):
                            adjective = rng.choice(adj_list_putback[difficulty_level]) 
-                        Active_Phrase_Adjectives.append(Node(adjective))
 
+                        Active_Phrase_Adjectives.append(Node(adjective))
 
                     else:
                         noun = rng.choice(noun_list_putback[difficulty_level])
+
                         while is_in_linkedlist(Active_Phrase_Nouns,noun):
                            noun = rng.choice(noun_list_putback[difficulty_level]) 
-                        Active_Phrase_Nouns.append(Node(noun))
 
+                        Active_Phrase_Nouns.append(Node(noun))
             
             # Adds the nouns to the adjectives in order to have the full phrase there
             curnode = Active_Phrase_Nouns.head
@@ -460,7 +461,6 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                     n_change_frame.set_fill_color("GreenYellow")
                     saves_bg.set_fill_color("GreenYellow")
                 
-
                 elif modelabel.get_label() == "PUTBACK MODE":
                     modelabel.set_label("CHARADE MODE")
                     modebutton.set_fill_color("Plum")
@@ -474,7 +474,6 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                     saves_bg.set_fill_color("Plum")
 
                 else:
-                    
                     modelabel.set_label("TAKEOUT MODE")
                     modebutton.set_fill_color("Aquamarine")
                     n_change_frame.set_fill_color("Aquamarine")
@@ -485,10 +484,13 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                     difficulty_button.set_fill_color(["#50DF78","#FFF200","#F1595F"][pos])
                 
         # (/'^')/ Praise be to the ELIF CHAIN \('^'\)       
+        # Basically, if the element, which is the thing that is being clicked, is the same thing as the given label,
+        # then the specified code runs
 
         elif element == difficulty_button or element == difficulty_label:
 
             if Timer_on_Screen._ticking == False:
+
                 if difficulty_label.get_label() != "ACTING":
                     cycle_text_and_color(difficulty_label,[" EASY ", "MEDIUM", " HARD "], ["#000000","#000000","#000000"])
                     cycle_text_and_color(difficulty_button,["BUTTON"], ["#50DF78","#FFF200","#F1595F"],False)
@@ -496,12 +498,13 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
         elif element == auto_button or element == auto_label:
             
             if Timer_on_Screen._ticking == False:
+                
                 if n_picks_visualized.get_label() != "R":
                     appropriate_time= int(n_picks_visualized.get_label())
                     Timer_on_Screen._Timerlabel.set_label(f"0{appropriate_time}:00")
+
                 elif ready_to_show:
                     Timer_on_Screen._Timerlabel.set_label(f"??:??")
-
 
             # if auto_label.get_label() == " AUTO ":
             #     auto_label.set_label("MANUAL")
@@ -514,12 +517,14 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                 Timer_on_Screen._Timerlabel.set_label(f"00:00")
 
         elif element == rules_button or element == rules_label:
+            
             if Timer_on_Screen._ticking == False:
-                flip_over_vertical_screen_edge(gw,info_label)
-                flip_over_vertical_screen_edge(gw,info_menu)
+                flip_over_vertical_screen_edge(gw, info_label)
+                flip_over_vertical_screen_edge(gw, info_menu)
                 cycle_text_and_color(rules_label, [" INFO "," EXIT "], ["#000000","#f0000f"])
+
                 for fun_label in combined_rules_labels_fun_and_glory:
-                    flip_over_vertical_screen_edge(gw,fun_label)
+                    flip_over_vertical_screen_edge(gw, fun_label)
             
         elif element == nightlight_button or element == nightlight_label:
             
@@ -527,8 +532,10 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
 
                 background.set_color("white")
                 background.set_fill_color("white")
+
                 for label in saved_label_list:
                     label.set_color("#000000")
+
                 Timer_on_Screen._unred = "#000000"
                 info_menu.set_color("white")
                 info_menu.set_fill_color("white")
@@ -541,8 +548,10 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
             else:
                 background.set_color("#1e1e1e")
                 background.set_fill_color("#1e1e1e")
+
                 for label in saved_label_list:
                     label.set_color("#1E1E1E")
+
                 Timer_on_Screen._unred = "#fefefe"
                 info_menu.set_color("#1E1E1E")
                 info_menu.set_fill_color("#1E1E1E")
@@ -607,15 +616,19 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                     ready_to_show = True
 
         elif element == clear_player_button or element == clear_player_label:
+
             if Timer_on_Screen._ticking == False:
+
                 for label in saved_label_list:
                     label.set_label(phrase_saved)
+
                 something_saved_label.set_label("0")
                 phrase_to_draw.set_label("cleared saves!")
                 phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 , y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
 
                 if phrase_to_draw.get_label() != "":
                     ready_to_show = False
+
                 else:
                     ready_to_show = True
 
@@ -631,30 +644,41 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
                 if Timer_on_Screen.is_pause() and Timerlabel.get_label() != "??:??":
                     
                     if localx < (Timerlabel.get_width()-colon.get_width())/4:
+
                         if localy > 0:
                             # Timerlabel_mins -= 10
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,600,False))
+
                         else:
                             # Timerlabel_mins += 10
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,600))
+
                     elif localx < (Timerlabel.get_width()-colon.get_width())/2:
+
                         if localy > 0:
                             # Timerlabel_mins -= 1
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,60,False))
+
                         else:
                             # Timerlabel_mins += 1
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,60))
+
                     elif localx < 3*(Timerlabel.get_width()-colon.get_width())/4+colon.get_width():
+
                         if localy > 0:
                             # Timerlabel_secs -= 10
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,10,False))
+
                         else:
                             # Timerlabel_secs += 10
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,10))
+
                     else:
+
                         if localy > 0:
                             # Timerlabel_secs -= 1
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1,False))
+
                         else:
                             # Timerlabel_secs += 1
                             Timer_on_Screen._Timerlabel.set_label(incr_decr(Timerlabel,1))
@@ -662,13 +686,11 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
             elif type(TimerCompound.get_element_at(localx,localy)) == GCompound:
 
                 if not Timer_on_Screen._ticking and Timer_on_Screen._Timerlabel.get_label() != "??:??":
-                    
                     countdown= gw.set_interval(step,TIME_STEP)
                     Timer_on_Screen.play_pause()
                     Timer_on_Screen._ticking = True
 
                 elif Timer_on_Screen._ticking:
-
                     stop_time(Timer_on_Screen)
                     countdown.stop()
                         
@@ -687,16 +709,20 @@ def what_are_those(easynouns,mediumnouns,hardnouns,easyadjs,mediumadjs,hardadjs,
 
             if difficulty_label.get_label() != "ACTING":
                 difficulty_level = [" EASY ", "MEDIUM", " HARD "].index(difficulty_label.get_label())
+
             else:
                 difficulty_level = "ACTING"
 
             # If you click the screen anywhere else, it will run this algorithm and put text on the screen
             if modelabel.get_label() == "TAKEOUT MODE":
                 Active_Phrase_Total = determine_phrase_takeout(difficulty_level)
+                
             elif modelabel.get_label() == "PUTBACK MODE":
                 Active_Phrase_Total = determine_phrase_putback(difficulty_level)
+
             else:
                 Active_Phrase_Total = determine_phrase_takeout("ACTING")
+
             curnode = Active_Phrase_Total.head
             
             
@@ -747,4 +773,10 @@ def read_word_bag(f):
     return list
 
 if __name__ == "__main__":
-    what_are_those("easy_nouns.txt","medium_nouns.txt","hard_nouns.txt", "easy_adjectives.txt", "medium_adjectives.txt", "hard_adjectives.txt", "verbs_and_more.txt")
+    what_are_those("easy_nouns.txt",
+                   "medium_nouns.txt",
+                   "hard_nouns.txt",
+                   "easy_adjectives.txt",
+                   "medium_adjectives.txt",
+                   "hard_adjectives.txt",
+                   "verbs_and_more.txt")

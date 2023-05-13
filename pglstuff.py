@@ -94,12 +94,13 @@ def center_phrase_to_draw(gw, phrase_to_draw, new_text, backup = None):
     phrase_to_draw.set_label(new_text)
     if phrase_to_draw.get_width() >= 11*gw.get_width()/12:
         number_of_spaces = new_text.count(" ")
+
         if number_of_spaces % 2 != 0:
             number_of_spaces += 1
+
         position_of_midway_space = find_nth(new_text," ",number_of_spaces//2)
         phrase_first_half = new_text[0:position_of_midway_space]
         phrase_second_half = new_text[position_of_midway_space:]
-
 
         phrase_to_draw.set_label(phrase_first_half)
         phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width())/2,
@@ -108,6 +109,7 @@ def center_phrase_to_draw(gw, phrase_to_draw, new_text, backup = None):
             backup.set_label(phrase_second_half)
             backup.set_location((gw.get_width() - backup.get_width()) / 2 ,
                                     y = (gw.get_height()+phrase_to_draw.get_ascent())/2+15)
+            
     else:
         phrase_to_draw.set_location((gw.get_width() - phrase_to_draw.get_width()) / 2 ,
                                     y = (gw.get_height() + phrase_to_draw.get_ascent()) / 2)
@@ -191,12 +193,16 @@ class Timerclass:
             zero.set_font(self._Timerlabel.get_font())
             self._colon = GLabel(":")
             self._colon.set_font(self._Timerlabel.get_font())
+
             if i >= 4:
                 negation_when_needed_for_timer_setup = -1
+
             if i % 4 >= 2:
                 offset_with_colon = self._colon.get_width()
+
             else:
                 offset_with_colon = 0
+
             up_down_button.add_vertex(i%4*zero.get_width()+offset_with_colon,(-self._Timerlabel.get_height()/2)*negation_when_needed_for_timer_setup-10-10*(1-negation_when_needed_for_timer_setup))
             for b in range(3):
                 up_down_button.add_polar_edge(zero.get_width(),120*b*negation_when_needed_for_timer_setup)
@@ -204,9 +210,7 @@ class Timerclass:
             up_down_button.set_filled(True)
             up_down_button.set_fill_color(f"lightgrey")
 
-
             self._compound.add(up_down_button)
-        
         
         start_stop_button = GCompound()
         start_stop_button.set_location((self._Timerlabel.get_width())/4,40)
@@ -224,31 +228,37 @@ class Timerclass:
         
 
     def is_pause(self):
-            if self.ss_text.get_label() == self._play:
-                return True
-            else:
-                return False
+        # Returns a boolean flag that tells if the timer is paused or not
+            
+        if self.ss_text.get_label() == self._play:
+            return True
+        
+        else:
+            return False
 
     def play_pause(self):
+        # Switches between having the timer count down, and having the timer in a pasued state
+
         if self.is_pause():
             self.ss_text.set_label(self._pause)
             self._color_change_ok = True
+
         else:
             self.ss_text.set_label(self._play)
             self._color_change_ok = False
 
-        
-    
-
     def blink(self):
+        # If the timer is going, it will make the timer "blink," or change colors from red to black or black to red 
+
         if self._color_change_ok:
 
             if self._Timerlabel.get_color() != self._red:
                 self._Timerlabel.set_color(self._red)
+
             else:
                 self._Timerlabel.set_color(self._unred)
         
-def draw_gw_button_xywhLCFfc(gw,x=0,y=0,width=10,height=10,labeltext = "",color="lightgrey",font="20pt 'Consolas'",fontcolor = "black", ycorfa=2):
+def draw_gw_button_xywhLCFfc(gw, x = 0, y = 0, width = 10, height = 10, labeltext = "", color = "lightgrey", font = "20pt 'Consolas'", fontcolor = "black", ycorfa = 2):
     # Returns tuple containing the GObjects for both the button and the label
 
     # Adds the mode button to the screen ("TAKEOUT MODE" or "PUTBACK MODE")
@@ -262,22 +272,28 @@ def draw_gw_button_xywhLCFfc(gw,x=0,y=0,width=10,height=10,labeltext = "",color=
     label.set_font(font)
     label.set_color(fontcolor)
     midline = label.get_height()/2
+
     if width <= label.get_width():
         width = label.get_width() + 20
         labx = x + 10
+
     else:
         labx = x+(width -label.get_width())/2
 
     if height < label.get_height():
         height= label.get_height() + 20
         laby = y+ midline + 10
+
     else:
         laby = y+ height/2 + midline -ycorfa
+
     gw.add(label, labx, laby)
 
     return (button, label)
 
-def just_draw_label(gw,x,y,labeltext,font="20pt 'Consolas'",ycorfa = 2, part_of_something_greater = False):
+def just_draw_label(gw, x, y, labeltext, font="20pt 'Consolas'", ycorfa = 2, part_of_something_greater = False):
+    # Initializes a GLabel with specified parameters
+
     label = GLabel(labeltext)
     label.set_font(font)
     label.set_color("black")
@@ -288,7 +304,9 @@ def just_draw_label(gw,x,y,labeltext,font="20pt 'Consolas'",ycorfa = 2, part_of_
 
     return label
 
-def draw_fun_labels(gw,info):
+def draw_fun_labels(gw, info):
+    # Initializes the labels for the info screen
+
     fun_label_1 = just_draw_label(gw, gw.get_width()+11, info.get_y() + info.get_height()+10,"PLAYING, SOLO STYLE:")
     fun_label_2 = just_draw_label(gw, gw.get_width()+11, fun_label_1.get_y() + fun_label_1.get_height()+10,"> Set the timer in the lower left corner.")
     fun_label_3 = just_draw_label(gw, gw.get_width()+11, fun_label_2.get_y() + fun_label_2.get_height()+10,"> Set the phrase length in the top right corner.")
@@ -308,6 +326,8 @@ def draw_fun_labels(gw,info):
     return(fun_label_1,fun_label_2,fun_label_3,fun_label_4,fun_label_5,fun_label_6,fun_label_7,fun_label_8,nothinglabel,glory_label_1,glory_label_2,glory_label_3,glory_label_4,glory_label_5)
 
 def draw_save_icon(gw,TLC_x = 0, TLC_y = 0, color = ["#c61111","#0XC3224"], scale_factor = 1):
+    # Initializes the save icon with its associated label
+
     scale_factor = int(scale_factor)
     backdimension = 40 * scale_factor
     saveicon = GCompound()
@@ -323,9 +343,6 @@ def draw_save_icon(gw,TLC_x = 0, TLC_y = 0, color = ["#c61111","#0XC3224"], scal
     back.set_fill_color(color[0])
     saveicon.add(back)
     
-    
-
-
 
     top_rectangle = GRect(-10,-18,20,14)
     top_rectangle.set_fill_color("#95cadc")
@@ -371,11 +388,16 @@ colorsetups = [["#c61111","#daf6ff"],
                ["#918877","#daf6ff"],
                ["#d76464","#daf6ff"]]
 
-def draw_all_save_icons_and_background(gw,phrase_to_draw):
+def draw_all_save_icons_and_background(gw, phrase_to_draw):
+    # This will store the background, icons, and labels in a tuple for easy access
+
     saved_label_list = []
     save_icon_list = []
     horizontal_shim1 = 6
-    save_background = GRect(3*gw.get_width()/16-horizontal_shim1,gw.get_height(),44*len(colorsetups)+horizontal_shim1*2,-gw.get_height()/10+14)
+    save_background = GRect(3*gw.get_width()/16-horizontal_shim1,
+                            gw.get_height(),
+                            44*len(colorsetups)+horizontal_shim1*2,
+                            -gw.get_height()/10+14)
     save_background.set_filled(True)
     save_background.set_fill_color("#9a9a9a")
     gw.add(save_background)
@@ -385,10 +407,12 @@ def draw_all_save_icons_and_background(gw,phrase_to_draw):
     for number in range(len(colorsetups)):
         index = number
 
-        saveicon,saved_label = draw_save_icon(gw,saves_base+24+(index)*44,720,colorsetups[index])
+        saveicon,saved_label = draw_save_icon(gw,saves_base+24+(index)*44,
+                                              720,
+                                              colorsetups[index])
         save_icon_list.append(saveicon)
         saved_label.set_font(phrase_to_draw.get_font())
         saved_label.set_color(phrase_to_draw.get_color())
         saved_label_list.append(saved_label)
 
-    return(save_background,save_icon_list,saved_label_list)
+    return (save_background, save_icon_list, saved_label_list)
